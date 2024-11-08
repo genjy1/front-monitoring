@@ -9,6 +9,7 @@ import IndexMachine from '@/views/machines/IndexMachine.vue'
 import LoginView from '@/views/LoginView.vue'
 import GoodsList from '@/views/GoodsList.vue'
 import MachineShow from '@/views/machines/MachineShow.vue'
+import UserEdit from '@/views/user/Edit.vue'
 
 const routes = [
   { path: '/login', component: LoginView },
@@ -27,6 +28,7 @@ const routes = [
   { path: '/stats', component: Stats, meta: { requiresAuth: true } },
   { path: '/account-edit', component: AccountEdit, meta: { requiresAuth: true } },
   { path: '/feedback', component: Feedback, meta: { requiresAuth: true } },
+  { path: '/user/:id/edit', name: 'user.edit', component: UserEdit, meta: { requiresAuth: true } },
 ]
 
 const router = createRouter({

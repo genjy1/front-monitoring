@@ -1,28 +1,38 @@
+// stores/userStore.js
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    user: null,
-    token: localStorage.getItem('token') || null,
+    user: null, // Данные о пользователе
   }),
+
   actions: {
     async fetchUser() {
-      if (!this.token) return
-
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/user', {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
+        const response = await axios.get('user')
         this.user = response.data
       } catch (error) {
-        console.error('Error fetching user data:', error)
+        console.error('Не удалось получить данные пользователя', error)
+        this.user = null
       }
     },
-    setUser(data) {
-      this.user = data
+
+    // Действие для выхода
+    async logout() {
+      try {
+        // Отправляем запрос на сервер для выхода
+        await axios.post('/logout')
+
+        // Очистка данных пользователя в хранилище
+        this.user = null
+
+        // Удаление токена из локального хранилища (если есть)
+        localStorage.removeItem('token')
+        sessionStorage.removeItem('token')
+      } catch (error) {
+        console.error('Ошибка при выходе из системы', error)
+      }
     },
   },
 })

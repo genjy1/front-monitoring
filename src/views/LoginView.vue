@@ -15,7 +15,7 @@ const login = async () => {
     })
 
     if (response.data && response.data.token) {
-      console.log('Login successful:', response.data)
+      // console.log('Login successful:', response.data)
       // Сохранить токен или выполнить другие действия
 
       localStorage.setItem('token', response.data.token)

@@ -16,9 +16,18 @@
             <th class="border-r p-2 font-normal text-[#333] text-center">Адрес</th>
           </tr>
         </thead>
-        <tbody v-if="machines">
+        <!-- Проверяем, если данные загружаются - показываем прелоадер, иначе таблицу -->
+        <tbody v-if="isLoading">
+          <tr>
+            <td colspan="6" class="text-center px-[50%] w-4/5 py-10">
+              <Preloader />
+            </td>
+          </tr>
+        </tbody>
+        <tbody v-else>
           <tr
             v-for="machine in machines.data"
+            :key="machine.id"
             class="text-center row cursor-pointer hover:bg-gray-100 border-b"
             @click="navigateToMachine(machine.id)"
           >
@@ -35,7 +44,6 @@
             <td class="border-r py-2">{{ machine.address }}</td>
           </tr>
         </tbody>
-        <Preloader v-else />
       </table>
     </div>
   </div>
@@ -48,7 +56,8 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Preloader from '@/components/Preloader.vue'
 
-const machines = ref([])
+const machines = ref([]) // Данные автоматов
+const isLoading = ref(true) // Состояние загрузки
 const router = useRouter()
 
 const navigateToMachine = (id) => {
@@ -61,7 +70,10 @@ onMounted(async () => {
     machines.value = response.data // Заполнение массива данными
   } catch (error) {
     console.error('Ошибка при загрузке данных:', error)
+  } finally {
+    isLoading.value = false // Скрываем прелоадер после загрузки
   }
 })
 </script>
+
 <style scoped></style>

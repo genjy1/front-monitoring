@@ -1,3 +1,53 @@
+<script setup>
+import { onMounted, ref, watch } from 'vue'
+import { useUserStore } from '@/stores/userStore'
+import { useRouter } from 'vue-router'
+import AccountStroke from './AccountStroke.vue'
+
+// Подключаем хранилище пользователя
+const userStore = useUserStore()
+const router = useRouter()
+const rotated = ref(false)
+
+const toggleClass = () => {
+  rotated.value = !rotated.value
+}
+
+// Реактивное состояние для дропдаунов
+const dropdowns = ref({
+  machine: false,
+  goods: false,
+  stats: false,
+  actions: false,
+})
+
+const logout = async () => {
+  await userStore.logout() // Вызов действия logout из Pinia
+  router.push('/login') // Перенаправление на страницу входа
+}
+
+// Реактивное состояние для имени пользователя, начальное значение null
+const user = ref(null)
+
+// Функция для переключения дропдаунов
+const toggleDropdown = (dropdown) => {
+  dropdowns.value[dropdown] = !dropdowns.value[dropdown]
+}
+
+// Загрузка данных пользователя при монтировании компонента
+onMounted(async () => {
+  await userStore.fetchUser()
+})
+
+// Наблюдатель, чтобы обновить имя пользователя при изменении данных в хранилище
+watch(
+  () => userStore.user,
+  (newUser) => {
+    user.value = newUser
+  },
+  { immediate: true },
+)
+</script>
 <template>
   <header class="border-b bg-white border-gray-200 text-[#777] fixed w-full top-0">
     <div class="mx-auto my-0 w-4/5 py-4 items-center justify-between hidden sm:flex">
@@ -133,51 +183,50 @@
             <circle cx="12" cy="8" r="4" fill="#777" />
             <path d="M4 20c0-4 4-6 8-6s8 2 8 6" fill="none" stroke="#777" stroke-width="2" />
           </svg>
-          <span>{{ user.name }}</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 ml-2 -mr-1 text-gray-400"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M5.23 7.21a.75.75 0 011.06-.02L10 10.358l3.71-3.149a.75.75 0 111.02 1.096l-4.24 3.6a.75.75 0 01-.99 0l-4.24-3.6a.75.75 0 01-.02-1.06z"
-              clip-rule="evenodd"
-            />
-          </svg>
+          <span @click="toggleDropdown('actions'), toggleClass()" class="cursor-pointer">{{
+            userStore.user.user_name
+          }}</span>
+          <AccountStroke
+            class="transition-all"
+            :class="rotated === true ? 'rotate-180' : 'rotate-0'"
+          />
+        </div>
+        <div class="dropdown absolute" v-show="dropdowns.actions">
+          <transition name="fade">
+            <ul class="relative top-[1.1rem] p-2 border right-[10.3rem] bg-white">
+              <li class="w-full text-nowrap p-1">
+                <RouterLink
+                  v-if="userStore.user"
+                  :to="{
+                    name: 'user.edit',
+                    path: 'user/:id/edit',
+                    params: { id: userStore.user.id },
+                  }"
+                  >Редактировать данные пользователя</RouterLink
+                >
+              </li>
+              <li class="w-full text-nowrap p-1">
+                <RouterLink to="/feedback">Обратная связь</RouterLink>
+              </li>
+              <li class="w-full text-nowrap p-1">
+                <button v-if="userStore.user" @click="logout">Выйти</button>
+              </li>
+            </ul>
+          </transition>
         </div>
       </div>
     </div>
   </header>
 </template>
 
-<script setup>
-import { onMounted, ref } from 'vue'
-import { useUserStore } from '@/stores/userStore'
-
-const userStore = useUserStore()
-const userData = ref()
-
-const dropdowns = ref({
-  machine: false,
-  goods: false,
-  stats: false,
-})
-
-const user = ref({
-  name: userStore.user.user_name, // Example user, replace with actual data
-})
-
-const toggleDropdown = (dropdown) => {
-  dropdowns.value[dropdown] = !dropdowns.value[dropdown]
-}
-
-onMounted(async () => {
-  await userStore.fetchUser()
-})
-</script>
-
 <style scoped>
-/* Add your custom styles here */
+/* Анимация для fade */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>
