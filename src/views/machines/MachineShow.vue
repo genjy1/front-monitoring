@@ -3,13 +3,30 @@
     <HeaderComponent />
     <div class="container mt-24 mx-auto my-0 w-4/5">
       <!-- Условие, чтобы подождать загрузки данных -->
-      <transition name="fade" mode="out-in">
-        <div v-if="machine">
-          <h1>Автомат #{{ machine.id }}</h1>
-        </div>
-        <!-- Сообщение, пока данные загружаются -->
-        <p v-else>Загрузка данных...</p>
-      </transition>
+      <div v-if="machine" class="w-2/5">
+        <h1>Автомат #{{ machine.id }}</h1>
+        <!-- v-if="machine.status !== 'Online'" -->
+        <ErrorMessageComponent
+          v-if="machine.status !== 'Online'"
+          :text="'Нет связи с автоматом. Удаленное управление недоступно'"
+        />
+        <ul>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div>
+      <!-- Сообщение, пока данные загружаются -->
+      <Preloader v-else />
     </div>
   </div>
 </template>
@@ -19,9 +36,11 @@ import HeaderComponent from '@/components/HeaderComponent.vue'
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import ErrorMessageComponent from '@/components/ErrorMessageComponent.vue'
+import Preloader from '@/components/Preloader.vue'
 
 const route = useRoute()
-const machine = ref() // Устанавливаем начальное значение null
+const machine = ref()
 
 onMounted(async () => {
   try {

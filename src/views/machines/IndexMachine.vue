@@ -5,10 +5,7 @@
       <h1 class="pb-2 text-2xl">Сервис</h1>
       <hr />
       <h2 class="py-2">Пожалуйста выберите автомат из списка:</h2>
-      <table
-        class="table-auto border-collapse border-[#ddd] border w-full hidden sm:table"
-        v-if="machines"
-      >
+      <table class="table-auto border-collapse border-[#ddd] border w-full hidden sm:table">
         <thead>
           <tr class="border bg-[#eee] h-14 text-nowrap">
             <th class="border-r p-2 font-normal text-[#333] text-center w-24">#</th>
@@ -19,7 +16,7 @@
             <th class="border-r p-2 font-normal text-[#333] text-center">Адрес</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="machines">
           <tr
             v-for="machine in machines.data"
             class="text-center row cursor-pointer hover:bg-gray-100 border-b"
@@ -38,8 +35,8 @@
             <td class="border-r py-2">{{ machine.address }}</td>
           </tr>
         </tbody>
+        <Preloader v-else />
       </table>
-      <p v-else>Загрузка данных...</p>
     </div>
   </div>
 </template>
@@ -49,6 +46,7 @@ import HeaderComponent from '@/components/HeaderComponent.vue'
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import Preloader from '@/components/Preloader.vue'
 
 const machines = ref([])
 const router = useRouter()

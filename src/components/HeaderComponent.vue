@@ -7,7 +7,7 @@
       >
         VendShop Online
       </router-link>
-      <nav class="list sblock">
+      <nav class="list block">
         <ul class="nav-list gap-5 flex">
           <li class="relative">
             <button @click="toggleDropdown('machine')" class="dropdown-nav flex items-center">
@@ -153,8 +153,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue'
+import { useUserStore } from '@/stores/userStore'
+
+const userStore = useUserStore()
+const userData = ref()
 
 const dropdowns = ref({
   machine: false,
@@ -163,12 +166,16 @@ const dropdowns = ref({
 })
 
 const user = ref({
-  name: 'John Doe', // Example user, replace with actual data
+  name: userStore.user.user_name, // Example user, replace with actual data
 })
 
 const toggleDropdown = (dropdown) => {
   dropdowns.value[dropdown] = !dropdowns.value[dropdown]
 }
+
+onMounted(async () => {
+  await userStore.fetchUser()
+})
 </script>
 
 <style scoped>

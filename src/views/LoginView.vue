@@ -1,15 +1,46 @@
-<script></script>
+<script setup>
+import axios from 'axios'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const user_name = ref('')
+const password = ref('')
+const router = useRouter()
+
+const login = async () => {
+  try {
+    const response = await axios.post('http://127.0.0.1:8000/api/login', {
+      user_name: user_name.value,
+      password: password.value,
+    })
+
+    if (response.data && response.data.token) {
+      console.log('Login successful:', response.data)
+      // Сохранить токен или выполнить другие действия
+
+      localStorage.setItem('token', response.data.token)
+
+      router.push('/')
+    } else {
+      console.error('Invalid response data:', response)
+    }
+  } catch (error) {
+    console.error('Login failed:', error.response || error.message)
+  }
+}
+</script>
 <template>
   <div
-    class="wrapper min-h-vdh bg-[url('https://online.vend-shop.com/images/bg_signin_large.png')] bg-top bg-no-repeat font-futura"
+    class="wrapper bg-[url('https://online.vend-shop.com/images/bg_signin_large.png')] bg-top bg-no-repeat font-futura pb-[22.5rem] bg-cover"
   >
     <div class="container mx-auto my-0 w-3/4 pt-5 pb-10">
       <h1 class="uppercase text-5xl font-bold text-center text-white my-5">vendshop online</h1>
-      <form action="" method="POST" class="max-w-[300px] mx-auto my-0">
+      <form @submit.prevent="login" method="POST" class="max-w-[300px] mx-auto my-0">
         <h2 class="my-2.5 text-[20px] text-center">Вход в систему</h2>
         <div class="input-group flex-col flex gap-2">
           <label for="user_name" class="sr-only">Имя пользователя</label>
           <input
+            v-model="user_name"
             type="text"
             name="name"
             id="name"
@@ -20,6 +51,7 @@
 
           <label for="password" class="sr-only">Пароль</label>
           <input
+            v-model="password"
             type="password"
             name="password"
             id="user_password"

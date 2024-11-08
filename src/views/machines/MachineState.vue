@@ -3,8 +3,7 @@
     <!-- Добавляем единственный корневой элемент -->
     <HeaderComponent />
     <div class="container mt-24 mx-auto w-4/5">
-      <ViewHeader v-if="machines" :text="header" />
-      <ViewHeader v-else :text="loading"></ViewHeader>
+      <ViewHeader :text="header" />
       <hr class="my-2" />
       <table class="hidden sm:table table-auto w-full border mt-4">
         <thead>
