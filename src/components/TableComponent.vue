@@ -1,4 +1,6 @@
 <script setup>
+import Preloader from './Preloader.vue'
+
 const props = defineProps({
   theader: Array,
   data: {
@@ -33,7 +35,9 @@ const props = defineProps({
       </tr>
       <!-- Сообщение, если данных нет -->
       <tr v-else>
-        <td class="text-center py-2" colspan="6">Данные отсутствуют</td>
+        <td colspan="6" class="text-center px-[50%] w-4/5 py-10">
+          <Preloader />
+        </td>
       </tr>
     </tbody>
   </table>

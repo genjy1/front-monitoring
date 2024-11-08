@@ -37,6 +37,7 @@
           ></textarea>
         </label>
       </div>
+      <input type="hidden" name="user_id" :value="1" />
       <button type="submit" class="mt-4 bg-[#337ab7] px-4 py-2 rounded text-white font-semibold">
         Отправить
       </button>
@@ -48,6 +49,16 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import HeaderComponent from '@/components/HeaderComponent.vue'
+import { useUserStore } from '@/stores/userStore'
+import { onMounted } from 'vue'
+
+const userStore = useUserStore()
+
+onMounted(async () => {
+  await userStore.fetchUser()
+  // Получение ID текущего пользователя
+  formData.value.user_id = userStore.user.id
+})
 
 const formData = ref({
   theme: '',
@@ -57,12 +68,9 @@ const formData = ref({
 
 const successMessage = ref('')
 
-// Получение ID текущего пользователя (если доступно через API или передается через props)
-formData.value.user_id = null // Установите нужный ID или получите его динамически
-
 const submitFeedback = async () => {
   try {
-    const response = await axios.post('/api/feedback', formData.value)
+    const response = await axios.post('/feedback', formData.value)
     successMessage.value = response.data.message || 'Сообщение отправлено успешно'
     formData.value.theme = ''
     formData.value.message = ''
