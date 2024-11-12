@@ -10,7 +10,7 @@ const thead = ['№ автомата', 'Дата и время', 'Принято
 const sales = ref(null)
 
 onMounted(async () => {
-  const response = await axios.get('http://127.0.0.1:8000/api/sales?page=2')
+  const response = await axios.get('http://127.0.0.1:8000/api/sales?page=1')
   sales.value = response.data
 })
 

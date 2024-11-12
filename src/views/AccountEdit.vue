@@ -91,7 +91,8 @@ const user = ref({
   password: '',
   role: '',
 })
-const timezones = ref(['UTC', 'Europe/Moscow', 'America/New_York']) // Здесь можно получить список временных зон динамически
+
+const timezones = 'тимезонес))'
 
 // Создаем экземпляр роутера для навигации (если нужно)
 const router = useRouter()

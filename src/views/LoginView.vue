@@ -30,71 +30,77 @@ const login = async () => {
 }
 </script>
 <template>
-  <div
-    class="wrapper bg-[url('https://online.vend-shop.com/images/bg_signin_large.png')] bg-top bg-no-repeat font-futura pb-[22.5rem] bg-cover"
-  >
-    <div class="container mx-auto my-0 w-3/4 pt-5 pb-10">
-      <h1 class="uppercase text-5xl font-bold text-center text-white my-5">vendshop online</h1>
-      <form @submit.prevent="login" method="POST" class="max-w-[300px] mx-auto my-0">
-        <h2 class="my-2.5 text-[20px] text-center">Вход в систему</h2>
-        <div class="input-group flex-col flex gap-2">
-          <label for="user_name" class="sr-only">Имя пользователя</label>
-          <input
-            v-model="user_name"
-            type="text"
-            name="name"
-            id="name"
-            placeholder="Имя пользователя"
-            required
-            class="p-3 bg-white text-[#555] font-bold border"
-          />
-
-          <label for="password" class="sr-only">Пароль</label>
-          <input
-            v-model="password"
-            type="password"
-            name="password"
-            id="user_password"
-            placeholder="Пароль"
-            required
-            class="p-3 bg-white text-[#555] font-bold border"
-          />
-
-          <div class="checkbox">
-            <label for="remember" class="text-sm">
-              <input type="checkbox" id="remember" name="remember" />
-              Запомнить меня
-            </label>
-          </div>
-
-          <div class="flex flex-col">
-            <button
-              type="submit"
-              class="bg-[#6E417E] text-lg text-white font-bold cursor-pointer max-w-[330px] px-4 py-2.5"
-            >
-              Войти
-            </button>
-          </div>
-
-          <div class="user-actions flex flex-col">
-            <a href="" class="register font-futuraBook">Регистрация</a>
-            <a href="" class="forget-password font-futuraBook">Забыли пароль?</a>
-          </div>
-
-          <div class="banner-wrapper">
-            <a
-              href="https://vend-shop.com/kofejnja-samoobsluzhivanija-kofe-point-koffee-space/"
-              class="banner-link"
-            >
-              <img
-                src="https://vend-shop.com/image/catalog/Banner_vso/coffee-space-banner.png"
-                alt="Banner"
-                class="banner-img"
+  <div class="wrapper bg-[#6B23A7] bg-no-repeat font-futura bg-cover h-full pt-8 pb-[10rem]">
+    <div
+      class="container mx-auto bg-white rounded-2xl border my-0 w-4/5 px-8 py-8 grid grid-rows-1 sm:grid-cols-2 sm:gap-16 gap-4 sm:h-[45.46rem]"
+    >
+      <div class="form-container h-full order-2 sm:order-1">
+        <!-- <h1 class="uppercase text-5xl font-bold text-center text-white">vendshop online</h1> -->
+        <form @submit.prevent="login" method="POST" class="">
+          <h2 class="text-[20px] text-center mb-8">Вход в систему</h2>
+          <div class="input-group grid grid-rows-4 gap-4 sm:gap-16 items-center">
+            <div class="input-group">
+              <label for="user_name" class="sr-only">Имя пользователя</label>
+              <input
+                v-model="user_name"
+                type="text"
+                name="name"
+                id="name"
+                placeholder="Имя пользователя"
+                required
+                class="p-3 bg-white text-[#555] font-bold border-2 border-[#6B23A7] rounded-lg w-full outline-none"
               />
-            </a>
+            </div>
+            <div class="input-group">
+              <label for="password" class="sr-only">Пароль</label>
+              <input
+                v-model="password"
+                type="password"
+                name="password"
+                id="user_password"
+                placeholder="Пароль"
+                required
+                class="p-3 bg-white text-[#555] font-bold border-2 border-[#6B23A7] rounded-lg w-full outline-none"
+              />
+            </div>
+
+            <div class="btn-wrapper">
+              <button
+                type="submit"
+                class="bg-[#6E417E] text-lg text-white font-bold cursor-pointer px-4 py-2.5 rounded-md w-full"
+              >
+                Войти
+              </button>
+            </div>
+
+            <div class="user-actions flex justify-between">
+              <a href="" class="register font-futuraBook">Регистрация</a>
+              <a href="" class="forget-password font-futuraBook">Забыли пароль?</a>
+            </div>
+
+            <div class="banner-wrapper">
+              <a
+                href="https://vend-shop.com/kofejnja-samoobsluzhivanija-kofe-point-koffee-space/"
+                class="banner-link"
+              >
+                <img
+                  src="https://vend-shop.com/image/catalog/Banner_vso/coffee-space-banner.png"
+                  alt="Banner"
+                  class="banner-img"
+                />
+              </a>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
+      <div
+        class="image-container bg-[url('/src/assets/login_image.jpg')] bg-no-repeat bg-center bg-cover w-full mt-2 rounded-xl h-[150px] sm:h-full order-1 sm:order-2"
+      ></div>
     </div>
   </div>
 </template>
+<style scoped>
+html {
+  overflow-y: hidden;
+}
+</style>

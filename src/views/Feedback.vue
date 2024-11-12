@@ -37,10 +37,7 @@
           ></textarea>
         </label>
       </div>
-      <input type="hidden" name="user_id" :value="1" />
-      <button type="submit" class="mt-4 bg-[#337ab7] px-4 py-2 rounded text-white font-semibold">
-        Отправить
-      </button>
+      <SubmitButton />
     </form>
   </div>
 </template>
@@ -51,6 +48,7 @@ import axios from 'axios'
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import { useUserStore } from '@/stores/userStore'
 import { onMounted } from 'vue'
+import SubmitButton from '@/components/SubmitButton.vue'
 
 const userStore = useUserStore()
 

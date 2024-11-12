@@ -45,6 +45,46 @@
           </tr>
         </tbody>
       </table>
+      <div class="flex flex-wrap gap-4">
+        <div v-if="isLoading" class="w-full flex justify-center py-10 sm:hidden">
+          <Preloader />
+        </div>
+
+        <div v-else class="w-full sm:hidden">
+          <div
+            v-for="machine in machines.data"
+            :key="machine.id"
+            class="border p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-100"
+            @click="navigateToMachine(machine.id)"
+          >
+            <div class="text-center mb-4">
+              <h3 class="text-xl font-semibold">{{ machine.name }}</h3>
+              <p class="text-gray-600">{{ machine.address }}</p>
+            </div>
+
+            <div class="space-y-2">
+              <div class="flex justify-between">
+                <span class="font-medium">ID:</span>
+                <span>{{ machine.id }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-medium">Status:</span>
+                <span :class="machine.status === 'Online' ? 'text-green-800' : 'text-red-800'">
+                  {{ machine.status }}
+                </span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-medium">Number:</span>
+                <span>{{ machine.number }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="font-medium">IMEI:</span>
+                <span>{{ machine.imei }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

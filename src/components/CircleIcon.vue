@@ -1,0 +1,7 @@
+<template>
+  <svg width="32" height="32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="45" stroke="black" stroke-width="5" fill="none" />
+    <line x1="50" y1="30" x2="50" y2="70" stroke="black" stroke-width="6" />
+    <line x1="30" y1="50" x2="70" y2="50" stroke="black" stroke-width="6" />
+  </svg>
+</template>
