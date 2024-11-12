@@ -12,6 +12,7 @@ import MachineShow from '@/views/machines/MachineShow.vue'
 import UserEdit from '@/views/user/Edit.vue'
 import UserRequisites from '@/views/user/UserRequisites.vue'
 import Totals from '@/views/stats/Totals.vue'
+import Register from '@/views/user/Register.vue'
 
 const routes = [
   { path: '/login', component: LoginView },
@@ -23,6 +24,7 @@ const routes = [
     props: true, // Указываем, что маршрут должен передавать параметры как пропсы,,
     meta: { requiresAuth: true },
   },
+  { path: '/register', name: 'register', component: Register },
   { path: '/goods-state', component: GoodsState, meta: { requiresAuth: true } },
   { path: '/goods-list', component: GoodsList, meta: { requiresAuth: true } },
   { path: '/machine-state', component: MachineState, meta: { requiresAuth: true } },

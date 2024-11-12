@@ -30,9 +30,11 @@ const login = async () => {
 }
 </script>
 <template>
-  <div class="wrapper bg-[#6B23A7] bg-no-repeat font-futura bg-cover h-full pt-8 pb-[10rem]">
+  <div
+    class="wrapper bg-no-repeat font-futura bg-[url('src/assets/login_image.jpg')] bg-cover h-full pt-8 pb-[11.05rem]"
+  >
     <div
-      class="container mx-auto bg-white rounded-2xl border my-0 w-4/5 px-8 py-8 grid grid-rows-1 sm:grid-cols-2 sm:gap-16 gap-4 sm:h-[45.46rem]"
+      class="container mx-auto bg-white my-0 w-4/5 px-8 py-8 grid grid-rows-1 sm:grid-cols-2 sm:gap-16 gap-4 sm:h-[45,46rem] rounded-3xl"
     >
       <div class="form-container h-full order-2 sm:order-1">
         <!-- <h1 class="uppercase text-5xl font-bold text-center text-white">vendshop online</h1> -->
@@ -74,7 +76,7 @@ const login = async () => {
             </div>
 
             <div class="user-actions flex justify-between">
-              <a href="" class="register font-futuraBook">Регистрация</a>
+              <RouterLink to="register" class="register">Регистрация</RouterLink>
               <a href="" class="forget-password font-futuraBook">Забыли пароль?</a>
             </div>
 
