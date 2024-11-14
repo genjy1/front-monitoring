@@ -13,6 +13,9 @@ import UserEdit from '@/views/user/Edit.vue'
 import UserRequisites from '@/views/user/UserRequisites.vue'
 import Totals from '@/views/stats/Totals.vue'
 import Register from '@/views/user/Register.vue'
+import Proceeds from '@/views/stats/Proceeds.vue'
+import Collections from '@/views/stats/Collections.vue'
+import ForgotPassword from '@/views/user/ForgotPassword.vue'
 
 const routes = [
   { path: '/login', component: LoginView },
@@ -31,6 +34,7 @@ const routes = [
   { path: '/stats/by-days', component: Totals, meta: { requiresAuth: true } },
   { path: '/sales', component: Sales, meta: { requiresAuth: true } },
   { path: '/stats', component: Stats, meta: { requiresAuth: true } },
+  { path: '/stats/collections', component: Collections, meta: { requiresAuth: true } },
   // { path: '/account-edit', component: AccountEdit, meta: { requiresAuth: true } },
   { path: '/feedback', component: Feedback, meta: { requiresAuth: true } },
   { path: '/user/:id/edit', name: 'user.edit', component: UserEdit, meta: { requiresAuth: true } },
@@ -40,6 +44,8 @@ const routes = [
     component: UserRequisites,
     meta: { requiresAuth: true },
   },
+  { path: '/stats/proceeds', name: 'proceeds', component: Proceeds, meta: { requiresAuth: true } },
+  { path: '/forget-password/', name: 'forget-password', component: ForgotPassword },
 ]
 
 const router = createRouter({

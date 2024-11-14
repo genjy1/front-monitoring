@@ -37,8 +37,7 @@ const login = async () => {
       class="container mx-auto bg-white my-0 w-4/5 px-8 py-8 grid grid-rows-1 sm:grid-cols-2 sm:gap-16 gap-4 sm:h-[45,46rem] rounded-3xl"
     >
       <div class="form-container h-full order-2 sm:order-1">
-        <!-- <h1 class="uppercase text-5xl font-bold text-center text-white">vendshop online</h1> -->
-        <form @submit.prevent="login" method="POST" class="">
+        <form @submit.prevent="login" method="POST">
           <h2 class="text-[20px] text-center mb-8">Вход в систему</h2>
           <div class="input-group grid grid-rows-4 gap-4 sm:gap-16 items-center">
             <div class="input-group">
@@ -77,7 +76,9 @@ const login = async () => {
 
             <div class="user-actions flex justify-between">
               <RouterLink to="register" class="register">Регистрация</RouterLink>
-              <a href="" class="forget-password font-futuraBook">Забыли пароль?</a>
+              <RouterLink to="forget-password" class="forget-password font-futuraBook"
+                >Забыли пароль?</RouterLink
+              >
             </div>
 
             <div class="banner-wrapper">

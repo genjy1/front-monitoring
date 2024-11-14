@@ -82,15 +82,15 @@
           <tbody>
             <tr class="border-b">
               <td class="p-2 font-bold border-r">Принято денег</td>
-              <td class="border-r">{{ cashStats.coinsReceived }}</td>
-              <td class="border-r">{{ cashStats.billsReceived }}</td>
-              <td>{{ cashStats.totalReceived }}</td>
+              <td class="border-r p-2">{{ cashStats.coinsReceived }}</td>
+              <td class="border-r p-2">{{ cashStats.billsReceived }}</td>
+              <td class="p-2">{{ cashStats.totalReceived }}</td>
             </tr>
             <tr class="border-b">
-              <td class="p-2 font-bold border-r">Выдано сдачи</td>
-              <td class="border-r">{{ cashStats.coinsReturned }}</td>
-              <td class="border-r">{{ cashStats.billsReturned }}</td>
-              <td>{{ cashStats.totalReturned }}</td>
+              <td class="font-bold border-r p-2">Выдано сдачи</td>
+              <td class="border-r p-2">{{ cashStats.coinsReturned }}</td>
+              <td class="border-r p-2">{{ cashStats.billsReturned }}</td>
+              <td class="p-2">{{ cashStats.totalReturned }}</td>
             </tr>
           </tbody>
         </table>

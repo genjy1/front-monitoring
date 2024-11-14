@@ -1,17 +1,25 @@
 <template>
+  <div
+    class="overlay w-full h-screen backdrop-blur-8 absolute bg-black bg-opacity-20"
+    v-show="isOpen"
+    @click="closeModal"
+  >
+    <!-- Add new record dialog -->
+    <DialogWindow :isOpen="isOpen" :newGood="newGood" @close="closeModal" @submitGood="addGood" />
+  </div>
   <div>
     <HeaderComponent />
 
     <main class="main container mx-auto my-0 w-4/5 mt-24">
       <!-- Success message component -->
-      <SuccessComponent />
+      <SuccessComponent v-if="message" />
 
       <header class="header flex items-center justify-between">
         <h1 class="text-3xl pb-2 sm:mt-3 font-semibold flex items-center justify-between">
           Список товаров
         </h1>
         <button
-          @click="openAddDialog"
+          @click="openModal"
           class="flex sm:button add-btn rounded font-normal p-2 text-center outline-none"
         >
           <span
@@ -74,38 +82,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Add new record dialog -->
-      <dialog ref="addDialog" class="modal rounded sm:w-2/4 w-4/5">
-        <header class="border-b">
-          <div class="container-modal flex justify-between gap-2 p-[15px]">
-            Добавить новую запись
-            <button @click="closeAddDialog" class="close">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-                fill="red"
-              >
-                <line x1="8" y1="8" x2="16" y2="16" stroke="#000000" stroke-width="2" />
-                <line x1="16" y1="8" x2="8" y2="16" stroke="#000000" stroke-width="2" />
-              </svg>
-            </button>
-          </div>
-        </header>
-        <form @submit.prevent="addGood" class="flex flex-col p-[15px] m-0 gap-2">
-          <label for="code" class="flex flex-col">
-            Код товара
-            <input v-model="newGood.code" type="text" id="code" class="px-4 py-2 border rounded" />
-          </label>
-          <label for="name" class="flex flex-col">
-            Наименование товара
-            <input v-model="newGood.name" type="text" id="name" class="px-4 py-2 border rounded" />
-          </label>
-          <button type="submit" class="bg-[#337ab7] rounded text-white px-2 py-4">Сохранить</button>
-        </form>
-      </dialog>
     </main>
   </div>
 </template>
@@ -116,10 +92,19 @@ import axios from 'axios'
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import SuccessComponent from '@/components/SuccessComponent.vue'
 import DeleteIcon from '@/components/DeleteIcon.vue'
+import DialogWindow from '@/components/DialogWindow.vue'
 
 const goods = ref([])
 const newGood = ref({ code: '', name: '' })
-const addDialog = ref(null)
+const isOpen = ref(false)
+
+const openModal = () => {
+  isOpen.value = true
+}
+
+const closeModal = () => {
+  isOpen.value = false
+}
 
 const isMobile = computed(() => window.innerWidth < 640)
 
@@ -141,15 +126,12 @@ const deleteGood = async (id) => {
   }
 }
 
-const openAddDialog = () => addDialog.value.showModal()
-const closeAddDialog = () => addDialog.value.close()
-
 const addGood = async () => {
   try {
     const response = await axios.post('/api/goods', newGood.value)
     goods.value.push(response.data)
     newGood.value = { code: '', name: '' }
-    closeAddDialog()
+    closeModal() // Закрываем модальное окно после добавления
   } catch (error) {
     console.error('Ошибка при добавлении товара:', error)
   }
@@ -157,7 +139,3 @@ const addGood = async () => {
 
 onMounted(fetchGoods)
 </script>
-
-<style scoped>
-/* Add any necessary styles here */
-</style>

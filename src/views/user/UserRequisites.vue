@@ -15,62 +15,31 @@
       >
         <div class="form-group flex-group flex flex-col">
           <label for="paymentAccount" class="requisites-label">Номер расч. счёта</label>
-          <input
-            type="text"
-            id="paymentAccount"
-            v-model="form.paymentAccount"
-            placeholder="Номер расчетного счета"
-            class="form-control requisites-control border px-4 py-2"
-            required
-          />
+          <Input :model-value="form.paymentAccount" id="paymentAccount" input-type="text" />
         </div>
 
         <div class="form-group flex-group flex flex-col">
           <label for="correspondingAccount" class="requisites-label">Номер корр. счёта</label>
-          <input
-            type="text"
+          <Input
+            :model-value="form.correspondingAccount"
             id="correspondingAccount"
-            v-model="form.correspondingAccount"
-            placeholder="Номер корреспондентского счета"
-            class="form-control requisites-control border px-4 py-2"
-            required
+            input-type="text"
           />
         </div>
 
         <div class="form-group flex-group flex flex-col">
           <label for="BIK" class="requisites-label">Введите БИК</label>
-          <input
-            type="text"
-            id="BIK"
-            v-model="form.BIK"
-            placeholder="Банковский идентификационный код"
-            class="form-control requisites-control border px-4 py-2"
-            required
-          />
+          <Input :model-value="form.BIK" id="BIK" input-type="text" />
         </div>
 
         <div class="form-group flex-group flex flex-col">
           <label for="bankName" class="requisites-label">Наименование банка</label>
-          <input
-            type="text"
-            id="bankName"
-            v-model="form.bankName"
-            placeholder="Полное наименование банка"
-            class="form-control requisites-control border px-4 py-2"
-            required
-          />
+          <Input :model-value="form.bankName" id="bankName" input-type="text" />
         </div>
 
         <div class="form-group flex-group flex flex-col">
           <label for="INN" class="requisites-label">Введите свой ИНН</label>
-          <input
-            type="text"
-            id="INN"
-            v-model="form.INN"
-            placeholder="ИНН"
-            class="form-control requisites-control border px-4 py-2"
-            required
-          />
+          <Input :model-value="form.INN" id="bankName" input-type="text" />
         </div>
 
         <div class="form-group">
@@ -89,6 +58,7 @@ import axios from 'axios'
 import SuccessComponent from '@/components/SuccessComponent.vue'
 import ErrorComponent from '@/components/ErrorMessageComponent.vue'
 import HeaderComponent from '@/components/HeaderComponent.vue'
+import Input from '@/components/Input.vue'
 
 const form = ref({
   paymentAccount: '',

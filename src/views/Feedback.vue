@@ -1,15 +1,15 @@
 <template>
   <HeaderComponent />
   <div class="container mx-auto my-0 w-4/5 mt-24">
-    <h1 class="pb-4">Обратная связь</h1>
-    <hr />
+    <h1 class="pb-4 text-2xl font-medium">Обратная связь</h1>
+    <hr class="border-[#6B23A7]" />
     <p class="py-4">
       Если у вас есть вопросы или предложения по работе сервиса или вы хотите сообщить об ошибке,
       заполните форму ниже.
       <br />
       Мы обязательно свяжемся с вами по электронной почте.
     </p>
-    <hr />
+    <hr class="border-[#6B23A7]" />
     <div v-if="successMessage" class="text-green-500 my-4">{{ successMessage }}</div>
     <form @submit.prevent="submitFeedback" class="feedback-form pt-4" id="feedback">
       <div class="input-group pb-4">
@@ -20,7 +20,7 @@
             v-model="formData.theme"
             id="theme"
             placeholder="Тема сообщения"
-            class="rounded border font-normal px-4 py-1.5"
+            class="rounded border font-normal px-4 py-1.5 transition-all ease-in-out border-[#6B23A7] focus:border-[#8230da] focus:outline-none focus:ring-2 focus:ring-[#6223A7]"
           />
         </label>
         <p class="text-sm text-[#737373]">До 50 символов</p>
@@ -33,11 +33,11 @@
             id="message"
             cols="30"
             rows="10"
-            class="pt-2 pl-2 rounded border resize-none font-normal"
+            class="pt-2 pl-2 mb-4 rounded border resize-none font-normal transition-all ease-in-out border-[#6B23A7] focus:border-[#8230da] focus:outline-none focus:ring-2 focus:ring-[#6223A7]"
           ></textarea>
         </label>
       </div>
-      <SubmitButton />
+      <SubmitButton inner-text="Отправить" />
     </form>
   </div>
 </template>

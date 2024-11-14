@@ -1,8 +1,10 @@
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, onUnmounted } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
 import AccountStroke from './AccountStroke.vue'
+import Preloader from './Preloader.vue'
+import ProfileIcon from './ProfileIcon.vue'
 
 // Подключаем хранилище пользователя
 const userStore = useUserStore()
@@ -26,6 +28,13 @@ const dropdowns = ref({
   actions: false,
 })
 
+// Добавим асинхронный вызов для загрузки данных пользователя
+onMounted(async () => {
+  if (!userStore.user) {
+    await userStore.fetchUser() // вызовите метод для загрузки данных
+  }
+})
+
 const logout = async () => {
   await userStore.logout() // Вызов действия logout из Pinia
   router.push('/login') // Перенаправление на страницу входа
@@ -39,11 +48,6 @@ const toggleDropdown = (dropdown) => {
   dropdowns.value[dropdown] = !dropdowns.value[dropdown]
 }
 
-// Загрузка данных пользователя при монтировании компонента
-onMounted(async () => {
-  await userStore.fetchUser()
-})
-
 // Наблюдатель, чтобы обновить имя пользователя при изменении данных в хранилище
 watch(
   () => userStore.user,
@@ -54,7 +58,7 @@ watch(
 )
 </script>
 <template>
-  <header class="border-b bg-white border-gray-200 text-[#777] fixed w-full top-0">
+  <header class="border-b bg-white border-gray-200 text-[#777] w-full top-0 fixed">
     <div class="mx-auto my-0 w-4/5 py-4 items-center justify-between flex">
       <router-link
         to="/"
@@ -163,10 +167,14 @@ watch(
                   >Итоги по дням</router-link
                 >
               </li>
-              <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Инкассации</a></li>
+              <li>
+                <router-link to="/stats/collections" class="block px-4 py-2 hover:bg-gray-100"
+                  >Инкассации</router-link
+                >
+              </li>
               <hr />
               <li>
-                <router-link to="/stats-proceeds" class="block px-4 py-2 hover:bg-gray-100"
+                <router-link to="/stats/proceeds" class="block px-4 py-2 hover:bg-gray-100"
                   >Распределение выручки</router-link
                 >
               </li>
@@ -176,29 +184,19 @@ watch(
       </nav>
 
       <div class="menu hidden sm:block">
-        <div
+        <button
           v-if="user"
           class="drop-button flex items-center justify-between border-2 rounded p-2 cursor-pointer"
+          @click="toggleDropdown('actions'), toggleClass()"
         >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            class="mr-2"
-          >
-            <circle cx="12" cy="8" r="4" fill="#777" />
-            <path d="M4 20c0-4 4-6 8-6s8 2 8 6" fill="none" stroke="#777" stroke-width="2" />
-          </svg>
-          <span @click="toggleDropdown('actions'), toggleClass()" class="cursor-pointer">{{
-            userStore.user.user_name
-          }}</span>
+          <ProfileIcon />
+          <span class="cursor-pointer">{{ userStore.user.user_name }}</span>
           <AccountStroke
             class="transition-all"
             :class="rotated === true ? 'rotate-180' : 'rotate-0'"
           />
-        </div>
+        </button>
+        <Preloader v-else />
         <div class="dropdown absolute" v-show="dropdowns.actions">
           <transition name="fade">
             <ul class="relative top-[1.1rem] p-2 border right-[10.3rem] bg-white">
@@ -266,7 +264,7 @@ watch(
                 <div class="w-full h-0.5 bg-[#6323A7] transform -rotate-45 relative"></div>
               </div>
             </div>
-            <ul class="nav-list gap-5 flex flex-col mx-auto mt-4 w-4/5">
+            <ul class="nav-list gap-5 mx-auto mt-4 w-4/5">
               <li class="relative">
                 <button @click="toggleDropdown('machine')" class="dropdown-nav flex items-center">
                   Автоматы
@@ -355,15 +353,19 @@ watch(
                       >Итоги по дням</router-link
                     >
                   </li>
-                  <li><a href="#" class="block py-2 hover:bg-gray-100">Инкассации</a></li>
                   <li>
-                    <router-link to="/stats-proceeds" class="block py-2 hover:bg-gray-100"
+                    <router-link to="/stats/collections" class="block py-2 hover:bg-gray-100"
+                      >Инкассации</router-link
+                    >
+                  </li>
+                  <li>
+                    <router-link to="/stats/proceeds" class="block py-2 hover:bg-gray-100"
                       >Распределение выручки</router-link
                     >
                   </li>
                 </ul>
               </li>
-              <div v-if="user" class="drop-button flex items-center">
+              <button v-if="user" class="drop-button flex items-center">
                 <span @click="toggleDropdown('actions'), toggleClass()" class="cursor-pointer">{{
                   userStore.user.user_name
                 }}</span>
@@ -371,7 +373,7 @@ watch(
                   class="transition-all"
                   :class="rotated === true ? 'rotate-180' : 'rotate-0'"
                 />
-              </div>
+              </button>
               <transition name="fade">
                 <div class="dropdown" v-show="dropdowns.actions">
                   <ul class="bg-white">
@@ -383,8 +385,10 @@ watch(
                           path: 'user/:id/edit',
                           params: { id: userStore.user.id },
                         }"
+                        class="py-2"
                         >Редактировать данные пользователя</RouterLink
-                      >
+
+                      class="py-2"  >
                     </li>
                     <li class="w-full text-wrap">
                       <RouterLink
@@ -394,14 +398,16 @@ watch(
                           path: 'user/:id/requisites/',
                           params: { id: userStore.user.id },
                         }"
-                        >Редактировать реквизиты</RouterLink
+
+                        class="py-2">Редактировать реквизиты</RouterLink
                       >
                     </li>
                     <li class="w-full text-nowrap">
-                      <RouterLink to="/feedback">Обратная связь</RouterLink>
+                      <RouterLink to="/feedback"
+                      class="py-2">Обратная связь</RouterLink>
                     </li>
                     <li class="w-full text-nowrap">
-                      <button v-if="userStore.user" @click="logout">Выйти</button>
+                      <button v-if="userStore.user" @click="logout" class="py-2">Выйти</button>
                     </li>
                   </ul>
                 </div>

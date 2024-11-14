@@ -95,18 +95,22 @@ import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import Preloader from '@/components/Preloader.vue'
+import { useUserStore } from '@/stores/userStore'
 
 const machines = ref([]) // Данные автоматов
 const isLoading = ref(true) // Состояние загрузки
 const router = useRouter()
+
+const userStore = useUserStore()
 
 const navigateToMachine = (id) => {
   router.push({ name: 'showMachine', params: { id } }) // Передаем id через params
 }
 
 onMounted(async () => {
+  await userStore.fetchUser()
   try {
-    const response = await axios.get('http://127.0.0.1:8000/api/machines')
+    const response = await axios.get(`http://127.0.0.1:8000/api/user/${userStore.user.id}/machines`)
     machines.value = response.data // Заполнение массива данными
   } catch (error) {
     console.error('Ошибка при загрузке данных:', error)

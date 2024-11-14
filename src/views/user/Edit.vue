@@ -1,6 +1,13 @@
 <template>
   <HeaderComponent />
   <div class="mt-24 mx-auto w-4/5" v-if="userStore.user">
+    <transition name="fade">
+      <success-component
+        v-if="successMessage"
+        :message="successMessage"
+        @close="successMessage = ''"
+      />
+    </transition>
     <h1 class="pb-4 text-2xl">Редактирование профиля</h1>
     <hr class="pb-4" />
     <p>Здесь вы можете изменить данные вашего аккаунта</p>
@@ -10,7 +17,7 @@
       <form @submit.prevent="updateFio" class="grid grid-cols-4 gap-2">
         <label for="fio" class="font-bold">ФИО (организация)</label>
         <EditInput :model-value="user.fio" :id="'fio'" input-type="text" />
-        <SubmitButton />
+        <SubmitButton inner-text="Изменить" class="max-w-[144px]" />
       </form>
 
       <!-- Обновление имени пользователя -->
@@ -19,7 +26,7 @@
           <div class="input-group items-center justify-between grid grid-cols-4 gap-2">
             <label for="user_name" class="font-bold">Имя пользователя:</label>
             <EditInput :model-value="user.user_name" :id="'user_name'" input-type="text" />
-            <SubmitButton />
+            <SubmitButton inner-text="Изменить" class="max-w-[144px]" />
           </div>
           <div class="sub-wrapper mt-auto">
             <p>От 2 до 64 символов, можно использовать буквы латинского алфавита (a-Z) и цифры</p>
@@ -31,7 +38,7 @@
       <form @submit.prevent="updateEmail" class="grid grid-cols-4 gap-2">
         <label for="user_email" class="font-bold">Email</label>
         <EditInput :model-value="user.user_email" :id="'user_email'" input-type="email" />
-        <SubmitButton />
+        <SubmitButton inner-text="Изменить" class="max-w-[144px]" />
       </form>
 
       <!-- Обновление временной зоны -->
@@ -44,14 +51,14 @@
         >
           <option v-for="tz in timezones" :key="tz" :value="tz">{{ tz }}</option>
         </select>
-        <SubmitButton />
+        <SubmitButton inner-text="Изменить" class="max-w-[144px]" />
       </form>
 
       <!-- Обновление пароля -->
       <form @submit.prevent="updatePassword" class="grid grid-cols-4 gap-2">
         <label for="password" class="font-bold">Изменение пароля</label>
         <EditInput :model-value="user.password" :id="'password'" input-type="password" />
-        <SubmitButton />
+        <SubmitButton inner-text="Изменить" class="max-w-[144px]" />
       </form>
 
       <!-- Если роль администратора, доступно обновление роли -->
@@ -77,9 +84,11 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/userStore'
 import SubmitButton from '@/components/SubmitButton.vue'
-import EditInput from '@/components/EditInput.vue'
+import EditInput from '@/components/Input.vue'
+import SuccessComponent from '@/components/SuccessComponent.vue'
 
 const userStore = useUserStore()
+const successMessage = ref('')
 const timezones = Intl.supportedValuesOf('timeZone')
 // Create a computed property to keep `user` reactive and tied to `userStore.user`
 const user = computed(() => userStore.user || {})
@@ -96,6 +105,7 @@ const router = useRouter()
 const sendUpdateRequest = async (url, data) => {
   try {
     const response = await axios.patch(url, data)
+    successMessage.value = response.data.message
     console.log(response.data.message)
   } catch (error) {
     console.error('Ошибка при обновлении данных:', error)
@@ -126,3 +136,14 @@ const updateRole = async () => {
   await sendUpdateRequest(`/user/${user.value.id}/update/role`, { role: user.value.role })
 }
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
