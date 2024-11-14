@@ -6,7 +6,7 @@
       <div v-if="machine" class="sm:w-2/5">
         <ViewHeader class="border-b mb-2" :text="machineHeader" />
 
-        <SuccessComponent v-if="message" :message="message" />
+        <SuccessComponent v-if="message" :message="message" @close="message = ''" />
 
         <ErrorMessageComponent
           v-if="machine.status !== 'Online'"

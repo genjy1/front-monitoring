@@ -44,15 +44,20 @@
 <script setup>
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import ViewHeader from '@/components/ViewHeader.vue'
+import { useUserStore } from '@/stores/userStore'
 import axios from 'axios'
 import { onMounted, ref } from 'vue'
 
 const header = 'Состояние автоматов'
 const loading = ref('Загрузка данных...')
 const machines = ref([])
+const userStore = useUserStore()
 
 onMounted(async () => {
-  const response = await axios.get('http://127.0.0.1:8000/api/machines/')
+  if (!userStore.user) {
+    await userStore.fetchUser() // вызовите метод для загрузки данных
+  }
+  const response = await axios.get(`http://127.0.0.1:8000/api/user/${userStore.user.id}/machines/`)
   machines.value = response.data
 })
 </script>

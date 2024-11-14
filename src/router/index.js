@@ -16,6 +16,7 @@ import Register from '@/views/user/Register.vue'
 import Proceeds from '@/views/stats/Proceeds.vue'
 import Collections from '@/views/stats/Collections.vue'
 import ForgotPassword from '@/views/user/ForgotPassword.vue'
+import ResetPassword from '@/views/user/ResetPassword.vue'
 
 const routes = [
   { path: '/login', component: LoginView },
@@ -46,6 +47,17 @@ const routes = [
   },
   { path: '/stats/proceeds', name: 'proceeds', component: Proceeds, meta: { requiresAuth: true } },
   { path: '/forget-password/', name: 'forget-password', component: ForgotPassword },
+  {
+    path: '/forgot-password',
+    name: 'ForgotPassword',
+    component: ForgotPassword,
+  },
+  {
+    path: '/reset-password',
+    name: 'ResetPassword',
+    component: ResetPassword,
+    // Ожидаем, что токен и email будут в query параметрах
+  },
 ]
 
 const router = createRouter({
