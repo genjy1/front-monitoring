@@ -124,35 +124,49 @@ const fetchPage = async (url) => {
 }
 
 watchEffect(async () => {
-  const url = `http://127.0.0.1:8000/api/user/${userStore.user.id}/machines?page=${counter.value}`
-  await fetchPage(url) // Вызываем fetchPage с текущей страницей
-})
-
-watchEffect(async () => {
-  try {
-    const response = await axios.get(
-      `http://127.0.0.1:8000/api/user/${userStore.user.id}/machines?page=${counter.value}`,
-    )
-    machines.value = response.data
-    links.value = response.data.links
-  } catch (error) {
-    console.error('Ошибка при загрузке данных:', error)
-  } finally {
-    isLoading.value = false // Скрываем прелоадер после загрузки
+  // Check if userStore.user is available before trying to access userStore.user.id
+  if (userStore.user && userStore.user.id) {
+    const url = `http://127.0.0.1:8000/api/user/${userStore.user.id}/machines?page=${counter.value}`
+    await fetchPage(url) // Fetch the data for the current page
+  } else {
+    console.warn('User data is not yet available')
   }
 })
 
+// watchEffect(async () => {
+//   try {
+//     const response = await axios.get(
+//       `http://127.0.0.1:8000/api/user/${userStore.user.id}/machines?page=${counter.value}`,
+//     )
+//     machines.value = response.data
+//     links.value = response.data.links
+//   } catch (error) {
+//     console.error('Ошибка при загрузке данных:', error)
+//   } finally {
+//     isLoading.value = false // Скрываем прелоадер после загрузки
+//   }
+// })
+
 onMounted(async () => {
-  await userStore.fetchUser()
   try {
-    const response = await axios.get(
-      `http://127.0.0.1:8000/api/user/${userStore.user.id}/machines?page=${counter.value}`,
-    )
-    machines.value = response.data // Заполнение массива данными
+    // Fetch user data if not already fetched
+    if (!userStore.user) {
+      await userStore.fetchUser()
+    }
+
+    // Check if the user data is available
+    if (userStore.user && userStore.user.id) {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/user/${userStore.user.id}/machines?page=${counter.value}`,
+      )
+      machines.value = response.data // Fill the machines array with the data
+    } else {
+      console.error('User data is not available')
+    }
   } catch (error) {
     console.error('Ошибка при загрузке данных:', error)
   } finally {
-    isLoading.value = false // Скрываем прелоадер после загрузки
+    isLoading.value = false // Hide the loader after the request is finished
   }
 })
 </script>

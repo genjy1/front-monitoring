@@ -30,21 +30,36 @@
         </tr>
       </tbody>
     </table>
+    <Pagination :links="links" @page-change="onPageChange" />
   </main>
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { onMounted, ref } from 'vue'
 import HeaderComponent from '@/components/HeaderComponent.vue'
+import axios from 'axios'
+import Pagination from '@/components/Pagination.vue'
 
-// Принимаем массив данных sales через props
-const props = defineProps({
-  sales: {
-    type: Array,
-    required: true,
-    default: () => [],
-  },
-})
+const sales = ref([]) // Инициализация как пустого массива
+const links = ref([]) // Инициализация как пустого массива
+
+// Функция для получения данных с сервера
+const getSales = async (url = '/sales/') => {
+  try {
+    const response = await axios.get(url)
+    sales.value = response.data.data
+    links.value = response.data.links
+  } catch (error) {
+    console.error('Ошибка при загрузке данных:', error)
+  }
+}
+
+// Функция для обработки смены страницы
+const onPageChange = async (url) => {
+  if (url) {
+    await getSales(url) // Загрузка данных с указанного URL
+  }
+}
 
 // Функция для форматирования даты
 const formatDate = (date) => {
@@ -59,6 +74,10 @@ const formatNumber = (value) => {
     maximumFractionDigits: 2,
   }).format(value)
 }
+
+onMounted(async () => {
+  await getSales() // Загрузка первой страницы данных при монтировании компонента
+})
 </script>
 
 <style scoped>

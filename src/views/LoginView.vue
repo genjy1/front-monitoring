@@ -81,7 +81,7 @@ const login = async () => {
               >
             </div>
 
-            <div class="banner-wrapper">
+            <div class="banner-wrapper flex justify-around">
               <a
                 href="https://vend-shop.com/kofejnja-samoobsluzhivanija-kofe-point-koffee-space/"
                 class="banner-link"
@@ -97,7 +97,7 @@ const login = async () => {
         </form>
       </div>
       <div
-        class="image-container bg-[url('/src/assets/login_image.jpg')] bg-no-repeat bg-center bg-cover w-full mt-2 rounded-xl h-[150px] sm:h-full order-1 sm:order-2"
+        class="image-container bg-[url('/src/assets/login_image.jpg')] bg-no-repeat bg-center bg-cover w-full sm:mt-0 mt-2 rounded-xl h-[150px] sm:h-full order-1 sm:order-2"
       ></div>
     </div>
   </div>
