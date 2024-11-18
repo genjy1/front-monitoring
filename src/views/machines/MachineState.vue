@@ -20,7 +20,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="machine in machines.data" class="border-b">
+          <tr v-for="machine in machines.data" :key="machine.id" class="border-b">
             <td class="py-2 text-center border-r">{{ machine.id }}</td>
             <td class="py-2 border-r text-center">{{ machine.number }}</td>
             <td
@@ -38,20 +38,28 @@
           </tr>
         </tbody>
       </table>
+      <Pagination :links="machines.links" @page-change="onPageChange" />
     </div>
   </div>
 </template>
+
 <script setup>
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import ViewHeader from '@/components/ViewHeader.vue'
+import Pagination from '@/components/Pagination.vue'
 import { useUserStore } from '@/stores/userStore'
 import axios from 'axios'
 import { onMounted, ref } from 'vue'
 
 const header = 'Состояние автоматов'
 const loading = ref('Загрузка данных...')
-const machines = ref([])
+const machines = ref({})
 const userStore = useUserStore()
+
+const onPageChange = async (url) => {
+  const response = await axios.get(url)
+  machines.value = response.data
+}
 
 onMounted(async () => {
   if (!userStore.user) {

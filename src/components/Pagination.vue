@@ -1,5 +1,7 @@
 <template>
-  <div class="links_wrapper flex flex-wrap gap-2 justify-center py-4">
+  <div
+    class="links_wrapper flex flex-wrap gap-2 justify-around sm:items-center sm:justify-center py-4"
+  >
     <button
       v-for="(link, index) in links"
       :key="index"
