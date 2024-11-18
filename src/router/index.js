@@ -17,6 +17,7 @@ import Proceeds from '@/views/stats/Proceeds.vue'
 import Collections from '@/views/stats/Collections.vue'
 import ForgotPassword from '@/views/user/ForgotPassword.vue'
 import ResetPassword from '@/views/user/ResetPassword.vue'
+import AttachMachine from '@/views/machines/AttachMachine.vue'
 
 const routes = [
   { path: '/login', component: LoginView },
@@ -28,6 +29,7 @@ const routes = [
     props: true, // Указываем, что маршрут должен передавать параметры как пропсы,,
     meta: { requiresAuth: true },
   },
+  { path: '/attach', name: 'attach', component: AttachMachine, meta: { requiresAuth: true } },
   { path: '/register', name: 'register', component: Register },
   { path: '/goods-state', component: GoodsState, meta: { requiresAuth: true } },
   { path: '/goods-list', component: GoodsList, meta: { requiresAuth: true } },

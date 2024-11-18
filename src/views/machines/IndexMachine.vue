@@ -2,7 +2,12 @@
   <div>
     <HeaderComponent />
     <div class="container mt-24 mx-auto my-0 w-4/5">
-      <h1 class="pb-2 text-2xl">Сервис</h1>
+      <h1 class="pb-2 text-2xl flex justify-between items-center">
+        Сервис
+        <RouterLink to="attach" class="text-sm bg-[#286090] px-4 py-2 rounded text-white"
+          >Привязать автомат</RouterLink
+        >
+      </h1>
       <hr />
       <h2 class="py-2">Пожалуйста выберите автомат из списка:</h2>
       <table class="table-auto border-collapse border-[#ddd] border w-full hidden sm:table">
