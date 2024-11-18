@@ -33,7 +33,7 @@ const addGood = () => {
     <header class="border-b">
       <div class="container-modal flex justify-between gap-2 p-[15px]">
         Добавить новую запись
-        <button @click="closeModal" class="close">
+        <button @click="closeModal" class="close rounded-full border-black cursor-pointer border-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"

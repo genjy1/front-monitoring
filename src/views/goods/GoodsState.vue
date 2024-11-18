@@ -72,11 +72,7 @@
         </div>
       </div>
     </div>
-
-    <!-- Pagination Slot -->
-    <div class="pagination mt-4">
-      <slot name="pagination"></slot>
-    </div>
+    <Pagination :links="links" @page-change="onPageChange" />
   </main>
 </template>
 
@@ -84,21 +80,28 @@
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import { ref, watchEffect } from 'vue'
 import axios from 'axios'
+import Pagination from '@/components/Pagination.vue'
 
 const goods = ref([])
+const counter = ref(1)
+const links = ref()
 
 const fetchGoods = async () => {
   try {
-    const response = await axios.get('/goods/state')
+    const response = await axios.get(`/goods/state?page=${counter.value}`)
     goods.value = response.data.data
+    links.value = response.data.links
   } catch (error) {
     console.error('Ошибка при загрузке товаров:', error)
   }
 }
 
+// Обработчик изменения страницы
+const onPageChange = (url) => {
+  const page = new URL(url).searchParams.get('page')
+  counter.value = page
+  fetchGoods()
+}
+
 watchEffect(fetchGoods)
 </script>
-
-<style scoped>
-/* Additional scoped styles can be added here if needed */
-</style>

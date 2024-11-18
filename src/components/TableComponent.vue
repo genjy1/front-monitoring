@@ -12,7 +12,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <table class="table table-auto w-full border">
+  <table class="sm:table hidden table-auto w-full border">
     <thead>
       <tr class="bg-[#eee]">
         <th class="font-normal py-2" v-for="(th, index) in theader" :key="index">{{ th }}</th>

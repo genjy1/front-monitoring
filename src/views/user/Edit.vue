@@ -14,36 +14,38 @@
 
     <!-- Обновление ФИО -->
     <div class="actions-wrapper pt-4 grid grid-rows-1 gap-6">
-      <form @submit.prevent="updateFio" class="grid grid-cols-4 gap-2">
+      <form @submit.prevent="updateFio" class="grid sm:grid-cols-4 gap-2">
         <label for="fio" class="font-bold">ФИО (организация)</label>
         <EditInput :model-value="user.fio" :id="'fio'" input-type="text" />
-        <SubmitButton inner-text="Изменить" class="max-w-[144px]" />
+        <SubmitButton inner-text="Изменить" class="sm:max-w-[144px]" />
       </form>
 
       <!-- Обновление имени пользователя -->
       <form @submit.prevent="updateUserName">
         <div class="form-group grid grid-rows-2">
-          <div class="input-group items-center justify-between grid grid-cols-4 gap-2">
+          <div
+            class="input-group sm:items-center justify-between sm:grid flex flex-col sm:grid-cols-4 gap-2"
+          >
             <label for="user_name" class="font-bold">Имя пользователя:</label>
             <EditInput :model-value="user.user_name" :id="'user_name'" input-type="text" />
-            <SubmitButton inner-text="Изменить" class="max-w-[144px]" />
+            <SubmitButton inner-text="Изменить" class="sm:max-w-[144px]" />
           </div>
-          <div class="sub-wrapper mt-auto">
+          <div class="sub-wrapper sm:mt-auto mt-12">
             <p>От 2 до 64 символов, можно использовать буквы латинского алфавита (a-Z) и цифры</p>
           </div>
         </div>
       </form>
 
       <!-- Обновление email -->
-      <form @submit.prevent="updateEmail" class="grid grid-cols-4 gap-2">
+      <form @submit.prevent="updateEmail" class="grid sm:grid-cols-4 gap-2">
         <label for="user_email" class="font-bold">Email</label>
-        <EditInput :model-value="user.user_email" :id="'user_email'" input-type="email" />
-        <SubmitButton inner-text="Изменить" class="max-w-[144px]" />
+        <EditInput :model-value="user.email" :id="'user_email'" input-type="email" />
+        <SubmitButton inner-text="Изменить" class="sm:max-w-[144px]" />
       </form>
 
       <!-- Обновление временной зоны -->
-      <form @submit.prevent="updateTimezone" class="grid grid-cols-4 gap-2">
-        <label for="user_tz" class="font-bold">Временная зона</label>
+      <form @submit.prevent="updateTimezone" class="grid sm:grid-cols-4 gap-2">
+        <label for="user_tz" class="font-bold outline-none">Временная зона</label>
         <select
           v-model="user.user_tz"
           id="user_tz"
@@ -51,14 +53,14 @@
         >
           <option v-for="tz in timezones" :key="tz" :value="tz">{{ tz }}</option>
         </select>
-        <SubmitButton inner-text="Изменить" class="max-w-[144px]" />
+        <SubmitButton inner-text="Изменить" class="sm:max-w-[144px]" />
       </form>
 
       <!-- Обновление пароля -->
-      <form @submit.prevent="updatePassword" class="grid grid-cols-4 gap-2">
+      <form @submit.prevent="updatePassword" class="grid sm:grid-cols-4 gap-2">
         <label for="password" class="font-bold">Изменение пароля</label>
         <EditInput :model-value="user.password" :id="'password'" input-type="password" />
-        <SubmitButton inner-text="Изменить" class="max-w-[144px]" />
+        <SubmitButton inner-text="Изменить" class="sm:max-w-[144px]" />
       </form>
 
       <!-- Если роль администратора, доступно обновление роли -->

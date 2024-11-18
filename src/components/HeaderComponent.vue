@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch, onUnmounted } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
 import AccountStroke from './AccountStroke.vue'
@@ -86,7 +86,7 @@ watch(
             </button>
             <ul
               v-if="dropdowns.machine"
-              class="dropdown-list absolute left-0 mt-2 w-48 bg-white shadow-lg"
+              class="dropdown-list absolute left-0 w-48 bg-white shadow-lg"
             >
               <li>
                 <router-link
@@ -264,7 +264,7 @@ watch(
                 <div class="w-full h-0.5 bg-[#6323A7] transform -rotate-45 relative"></div>
               </div>
             </div>
-            <ul class="nav-list gap-5 mx-auto mt-4 w-4/5">
+            <ul class="nav-list gap-5 mx-auto mt-4 w-4/5 grid">
               <li class="relative">
                 <button @click="toggleDropdown('machine')" class="dropdown-nav flex items-center">
                   Автоматы
@@ -281,7 +281,7 @@ watch(
                     />
                   </svg>
                 </button>
-                <ul v-if="dropdowns.machine" class="dropdown-list mt-2 w-48 bg-white">
+                <ul v-if="dropdowns.machine" class="dropdown-list w-48 bg-white">
                   <li>
                     <router-link to="/machine-state" class="block py-2 hover:bg-gray-100"
                       >Состояние автоматов</router-link
@@ -310,7 +310,7 @@ watch(
                     />
                   </svg>
                 </button>
-                <ul v-if="dropdowns.goods" class="dropdown-list mt-2 w-48 bg-white">
+                <ul v-if="dropdowns.goods" class="dropdown-list w-48 bg-white">
                   <li>
                     <router-link to="/goods-state" class="block py-2 hover:bg-gray-100"
                       >Состояние загрузки</router-link
@@ -342,7 +342,7 @@ watch(
                     />
                   </svg>
                 </button>
-                <ul v-if="dropdowns.stats" class="dropdown-list mt-2 w-48 bg-white">
+                <ul v-if="dropdowns.stats" class="dropdown-list w-48 bg-white">
                   <li>
                     <router-link to="/stats" class="block py-2 hover:bg-gray-100"
                       >Общая статистика</router-link
@@ -365,18 +365,18 @@ watch(
                   </li>
                 </ul>
               </li>
-              <button v-if="user" class="drop-button flex items-center">
-                <span @click="toggleDropdown('actions'), toggleClass()" class="cursor-pointer">{{
+              <button v-if="user" class="drop-button flex flex-col gap-2">
+                <span @click="toggleDropdown('actions'), toggleClass()" class="cursor-pointer flex">{{
                   userStore.user.user_name
-                }}</span>
-                <AccountStroke
+                }}
+                                <AccountStroke
                   class="transition-all"
                   :class="rotated === true ? 'rotate-180' : 'rotate-0'"
                 />
-              </button>
-              <transition name="fade">
+                </span>
+                <transition name="fade">
                 <div class="dropdown" v-show="dropdowns.actions">
-                  <ul class="bg-white">
+                  <ul class="bg-white text-left grid grid-rows-4">
                     <li class="w-full text-nowrap">
                       <RouterLink
                         v-if="userStore.user"
@@ -412,6 +412,7 @@ watch(
                   </ul>
                 </div>
               </transition>
+              </button>
             </ul>
           </nav>
         </div>

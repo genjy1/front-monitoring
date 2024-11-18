@@ -45,6 +45,7 @@
           </tr>
         </tbody>
       </table>
+
       <div class="flex flex-wrap gap-4">
         <div v-if="isLoading" class="w-full flex justify-center py-10 sm:hidden">
           <Preloader />
@@ -54,7 +55,7 @@
           <div
             v-for="machine in machines.data"
             :key="machine.id"
-            class="border p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-100"
+            class="border p-4 rounded-lg shadow-md cursor-pointer hover:bg-gray-100 mb-4"
             @click="navigateToMachine(machine.id)"
           >
             <div class="text-center mb-4">
@@ -85,6 +86,7 @@
           </div>
         </div>
       </div>
+      <Pagination :links="links" @page-change="fetchPage" />
     </div>
   </div>
 </template>
@@ -92,25 +94,60 @@
 <script setup>
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import axios from 'axios'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import Preloader from '@/components/Preloader.vue'
 import { useUserStore } from '@/stores/userStore'
+import Pagination from '@/components/Pagination.vue'
 
 const machines = ref([]) // Данные автоматов
 const isLoading = ref(true) // Состояние загрузки
 const router = useRouter()
-
+const counter = ref(1)
 const userStore = useUserStore()
-
+const links = ref([])
 const navigateToMachine = (id) => {
   router.push({ name: 'showMachine', params: { id } }) // Передаем id через params
 }
+const fetchPage = async (url) => {
+  if (!url) return // Защита от вызова с пустым URL
+  isLoading.value = true // Включаем прелоадер
+  try {
+    const response = await axios.get(url)
+    machines.value = response.data // Обновляем данные автоматов
+    links.value = response.data.links // Обновляем ссылки пагинации
+  } catch (error) {
+    console.error('Ошибка при загрузке данных:', error)
+  } finally {
+    isLoading.value = false // Скрываем прелоадер
+  }
+}
+
+watchEffect(async () => {
+  const url = `http://127.0.0.1:8000/api/user/${userStore.user.id}/machines?page=${counter.value}`
+  await fetchPage(url) // Вызываем fetchPage с текущей страницей
+})
+
+watchEffect(async () => {
+  try {
+    const response = await axios.get(
+      `http://127.0.0.1:8000/api/user/${userStore.user.id}/machines?page=${counter.value}`,
+    )
+    machines.value = response.data
+    links.value = response.data.links
+  } catch (error) {
+    console.error('Ошибка при загрузке данных:', error)
+  } finally {
+    isLoading.value = false // Скрываем прелоадер после загрузки
+  }
+})
 
 onMounted(async () => {
   await userStore.fetchUser()
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/api/user/${userStore.user.id}/machines`)
+    const response = await axios.get(
+      `http://127.0.0.1:8000/api/user/${userStore.user.id}/machines?page=${counter.value}`,
+    )
     machines.value = response.data // Заполнение массива данными
   } catch (error) {
     console.error('Ошибка при загрузке данных:', error)

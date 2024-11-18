@@ -83,6 +83,7 @@
         </div>
       </div>
     </main>
+    <Pagination :links="links" @page-change="onPageChange" />
   </div>
 </template>
 
@@ -93,10 +94,19 @@ import HeaderComponent from '@/components/HeaderComponent.vue'
 import SuccessComponent from '@/components/SuccessComponent.vue'
 import DeleteIcon from '@/components/DeleteIcon.vue'
 import DialogWindow from '@/components/DialogWindow.vue'
+import Pagination from '@/components/Pagination.vue'
 
 const goods = ref([])
 const newGood = ref({ code: '', name: '' })
 const isOpen = ref(false)
+const message = ref()
+const links = ref()
+const counter = ref(1)
+const onPageChange = (url) => {
+  const page = new URL(url).searchParams.get('page')
+  counter.value = page
+  fetchGoods()
+}
 
 const openModal = () => {
   isOpen.value = true
@@ -110,8 +120,9 @@ const isMobile = computed(() => window.innerWidth < 640)
 
 const fetchGoods = async () => {
   try {
-    const response = await axios.get('/goods/list')
+    const response = await axios.get(`/goods/list?page=${counter.value}`)
     goods.value = response.data.data
+    links.value = response.data.links
   } catch (error) {
     console.error('Ошибка при загрузке товаров:', error)
   }
