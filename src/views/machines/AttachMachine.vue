@@ -1,8 +1,9 @@
 <template>
   <HeaderComponent />
   <div class="container mx-auto mt-24 w-4/5">
-    <SuccessComponent v-if="message" :message="message" />
     <h1 class="text-2xl font-medium">Привязка автомата</h1>
+    <SuccessComponent v-if="message" :message="message" @close="message = ''" />
+    <ErrorMessageComponent v-if="errorMessage" :text="errorMessage" @close="text = ''" />
     <hr class="my-4" />
     <p>
       Для выполнения привязки предварительно разрешите автомату подключение к сети и работу
@@ -45,19 +46,28 @@
 import axios from 'axios'
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import SuccessComponent from '@/components/SuccessComponent.vue'
+import ErrorMessageComponent from '@/components/ErrorMessageComponent.vue'
 import { ref } from 'vue'
 
-const message = ref(false)
+const message = ref('')
+const errorMessage = ref('')
 const data = ref({
   controller_id: '',
 })
 
-const attach = () => {
+const attach = async () => {
   try {
-    const response = axios.post('/attach', data.value)
+    // Асинхронный запрос
+    const response = await axios.post('/attach', data.value)
+    // Установка сообщения
     message.value = response.data.message
+    // Сброс данных формы
+    data.value = { controller_id: '' }
   } catch (error) {
     console.warn(error)
+    // Обработка ошибок
+    errorMessage.value = error
+    message.value = 'Произошла ошибка при привязке автомата. Попробуйте снова.'
   }
 }
 </script>
