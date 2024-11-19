@@ -20,35 +20,36 @@
         </h1>
         <button
           @click="openModal"
-          class="flex sm:button add-btn rounded font-normal p-2 text-center outline-none"
+          class="sm:button add-btn font-normal p-2 text-center outline-none hidden sm:block border-2 rounded hover:bg-[#777] hover:text-white transition hover:border-transparent"
         >
-          <span
+          <!-- <span
             class="hidden sm:block border-2 p-2 rounded hover:bg-[#777] hover:text-white transition hover:border-transparent"
           >
-            Добавить
-          </span>
-          <span class="icon sm:hidden">
-            <svg width="32" height="32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50" cy="50" r="45" stroke="black" stroke-width="5" fill="none" />
-              <line x1="50" y1="30" x2="50" y2="70" stroke="black" stroke-width="6" />
-              <line x1="30" y1="50" x2="70" y2="50" stroke="black" stroke-width="6" />
-            </svg>
-          </span>
+
+          </span> -->
+          Добавить
         </button>
+        <span class="icon sm:hidden" @click="openModal">
+          <svg width="32" height="32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" stroke="black" stroke-width="5" fill="none" />
+            <line x1="50" y1="30" x2="50" y2="70" stroke="black" stroke-width="6" />
+            <line x1="30" y1="50" x2="70" y2="50" stroke="black" stroke-width="6" />
+          </svg>
+        </span>
       </header>
 
       <hr class="py-2" />
 
       <!-- Table for larger screens -->
       <table
-        v-if="goods.length && !isMobile"
-        class="w-full border-collapse border border-gray-300 sm:table"
+        v-if="goods.length"
+        class="w-full border-collapse border border-gray-300 hidden sm:table"
       >
         <thead>
           <tr class="border-b bg-[#eee]">
             <th class="border-r font-normal py-2">Код</th>
             <th class="border-r font-normal py-2">Наименование</th>
-            <th class="text-right w-[100px]"></th>
+            <th class="w-[100px] font-normal text-center">Удалить</th>
           </tr>
         </thead>
         <tbody>
@@ -65,7 +66,7 @@
       </table>
 
       <!-- Card layout for mobile screens -->
-      <div v-if="goods.length && isMobile" class="grid gap-4 sm:hidden">
+      <div v-if="goods.length" class="grid gap-4 sm:hidden">
         <div
           v-for="good in goods"
           :key="good.id"
@@ -115,8 +116,6 @@ const openModal = () => {
 const closeModal = () => {
   isOpen.value = false
 }
-
-const isMobile = computed(() => window.innerWidth < 640)
 
 const fetchGoods = async () => {
   try {

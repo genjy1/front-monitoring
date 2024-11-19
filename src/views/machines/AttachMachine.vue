@@ -33,10 +33,16 @@
         </div>
         <div class="input-group grid grid-rows-3">
           <label for="session_id">ID сессии</label>
-          <input type="text" name="session_id" id="session_id" class="border px-4 py-2 rounded" />
+          <input
+            type="text"
+            v-model="data.session_id"
+            name="session_id"
+            id="session_id"
+            class="border px-4 py-2 rounded"
+          />
           <p>8 символов</p>
         </div>
-        <button type="submit">Прикрепить</button>
+        <button type="submit" class="py-2 px-4 bg-[#286090] text-white rounded">Привязать</button>
       </form>
     </div>
     <RouterLink to="/">Назад</RouterLink>
@@ -53,6 +59,7 @@ const message = ref('')
 const errorMessage = ref('')
 const data = ref({
   controller_id: '',
+  session_id: '',
 })
 
 const attach = async () => {
@@ -62,7 +69,7 @@ const attach = async () => {
     // Установка сообщения
     message.value = response.data.message
     // Сброс данных формы
-    data.value = { controller_id: '' }
+    data.value = { controller_id: '', session_id: '' }
   } catch (error) {
     console.warn(error)
     // Обработка ошибок
