@@ -192,7 +192,7 @@ watch(
           <ProfileIcon />
           <span class="cursor-pointer">{{ userStore.user.user_name }}</span>
           <AccountStroke
-            class="transition-all"
+            class="transition-all ml-2 -mr-1"
             :class="rotated === true ? 'rotate-180' : 'rotate-0'"
           />
         </button>
