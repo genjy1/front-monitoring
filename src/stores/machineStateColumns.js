@@ -1,7 +1,7 @@
 // columnsStore.js
 import { defineStore } from 'pinia'
 
-export const useColumnsStore = defineStore('columns', {
+export const useMachineStateColumnsStore = defineStore('columns', {
   state: () => ({
     number: [false, 'Номер'],
     name: [false, 'Имя'],

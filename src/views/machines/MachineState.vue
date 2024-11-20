@@ -26,12 +26,7 @@
               <button
                 v-for="(column, index) in columns"
                 @click="toggleColumn(column, index)"
-                class="rounded border border-[#6B23A7] px-2 py-1 hover:border-white hover:bg-[#6B23A7] hover:text-white transition-all"
-                :class="
-                  activeIndex === index
-                    ? 'border-white bg-[#6B23A7] text-white'
-                    : 'border-[#6B23A7]'
-                "
+                class="filter-button rounded border border-[#6B23A7] px-2 py-1 hover:border-white hover:bg-[#6B23A7] hover:text-white transition-all"
               >
                 {{ column[1] }}
               </button>
@@ -39,7 +34,7 @@
           </transition>
         </div>
       </div>
-      <table class="hidden sm:table table-auto w-full border mt-4">
+      <table class="hidden sm:table table-auto w-full border mt-2">
         <thead>
           <tr class="border-b bg-[#eee]">
             <th class="border-r py-2 font-normal">#</th>
@@ -225,7 +220,7 @@ import HeaderComponent from '@/components/HeaderComponent.vue'
 import ViewHeader from '@/components/ViewHeader.vue'
 import Pagination from '@/components/Pagination.vue'
 import { useUserStore } from '@/stores/userStore'
-import { useColumnsStore } from '@/stores/columns'
+import { useMachineStateColumnsStore } from '@/stores/machineStateColumns'
 import axios from 'axios'
 import { onMounted, ref, onBeforeUnmount } from 'vue'
 import AccountStroke from '@/components/AccountStroke.vue'
@@ -238,7 +233,7 @@ const toggled = ref(false)
 const activeIndex = ref(null)
 
 const userStore = useUserStore()
-const columnsStore = useColumnsStore()
+const columnsStore = useMachineStateColumnsStore()
 const columns = columnsStore.$state // Используем все состояние хранилища
 
 const toggleColumn = (column, index) => {
@@ -292,5 +287,11 @@ onMounted(async () => {
 .slide-leave-from {
   height: auto;
   opacity: 1;
+}
+
+.active {
+  background: #6b23a7;
+  border-color: #fff;
+  color: #fff;
 }
 </style>
