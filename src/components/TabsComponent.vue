@@ -6,7 +6,7 @@
         v-for="tab in tabs"
         :key="tab.name"
         @click="$emit('update:activeTab', tab.name)"
-        class="border-transparent focus-within:border-blue-500"
+        class="border-transparent focus-within:border-blue-500 flex gap-2 items-center"
         :class="[
           'px-6 py-2 rounded-t-md text-sm font-semibold focus:outline-none',
           activeTab === tab.name
@@ -14,7 +14,8 @@
             : 'text-gray-500 hover:text-gray-700 border-b-2',
         ]"
       >
-        {{ tab.label }}
+        <component :is="tab.icon" />
+        <span>{{ tab.label }}</span>
       </button>
     </div>
 

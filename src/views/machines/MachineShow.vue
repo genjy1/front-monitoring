@@ -43,7 +43,7 @@
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import TabsComponent from '@/components/TabsComponent.vue'
 import axios from 'axios'
-import { ref, onMounted, computed, defineProps } from 'vue'
+import { ref, onMounted, computed, defineProps, defineAsyncComponent } from 'vue'
 import { useRoute } from 'vue-router'
 import ErrorMessageComponent from '@/components/ErrorMessageComponent.vue'
 import Preloader from '@/components/Preloader.vue'
@@ -51,9 +51,24 @@ import SettingsIcon from '@/components/SettingsIcon.vue'
 import SuccessComponent from '@/components/SuccessComponent.vue'
 
 const tabs = [
-  { name: 'information', label: 'Информация', component: 'MachineInfo' },
-  { name: 'settings', label: 'Настройки автомата', component: 'MachineSettings' },
-  { name: 'monetary', label: 'Номиналы', component: 'MonetarySettings' },
+  {
+    name: 'information',
+    label: 'Информация',
+    component: 'MachineInfo',
+    icon: defineAsyncComponent(() => import('@/components/InfoIcon.vue')),
+  },
+  {
+    name: 'settings',
+    label: 'Настройки автомата',
+    component: 'MachineSettings',
+    icon: defineAsyncComponent(() => import('@/components/SettingsIcon.vue')),
+  },
+  {
+    name: 'monetary',
+    label: 'Номиналы',
+    component: 'MonetarySettings',
+    icon: defineAsyncComponent(() => import('@/components/MoneyIcon.vue')),
+  },
   // Можно добавить дополнительные табы в будущем
 ]
 const route = useRoute()
