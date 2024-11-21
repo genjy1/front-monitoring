@@ -1,12 +1,12 @@
 <template>
   <div>
     <!-- Навигация табов -->
-    <div class="flex justify-between py-4">
+    <div class="flex flex-wrap justify-between py-4 gap-4 items-center">
       <button
         v-for="tab in tabs"
         :key="tab.name"
         @click="$emit('update:activeTab', tab.name)"
-        class="border-transparent focus-within:border-blue-500 flex gap-2 items-center"
+        class="border-transparent focus-within:border-blue-500 flex gap-2 items-center w-full sm:w-auto"
         :class="[
           'px-6 py-2 rounded-t-md text-sm font-semibold focus:outline-none',
           activeTab === tab.name

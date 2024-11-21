@@ -1,13 +1,20 @@
 <template>
-  <form @submit.prevent="saveSettings" class="space-y-6 bg-white w-3/5 mt-20 mx-auto p-4 rounded">
+  <form
+    @submit.prevent="saveSettings"
+    class="space-y-6 bg-white w-full max-w-lg mt-20 mx-auto p-6 rounded shadow-lg"
+  >
+    <!-- Заголовок модального окна -->
+    <div class="flex items-center justify-between">
+      <h3 class="text-xl font-semibold">Настройки QR-платежей</h3>
+      <button type="button" @click="$emit('close')" class="text-gray-500 hover:text-gray-700">
+        <CloseIcon />
+      </button>
+    </div>
+
     <div class="grid gap-4">
-      <!-- Провайдер -->
-      <div class="modal-header flex items-center justify-between">
-        <h3>Настройки QR-платежей</h3>
-        <button type="button" class="close" @click="$emit('close')"><CloseIcon /></button>
-      </div>
+      <!-- Выбор провайдера -->
       <div>
-        <label for="provider" class="block text-sm font-medium text-gray-700"> Провайдер </label>
+        <label for="provider" class="block text-sm font-medium text-gray-700">Провайдер</label>
         <select
           id="provider"
           v-model="form.provider"
@@ -18,94 +25,62 @@
         </select>
       </div>
 
-      <!-- API-ключ -->
-      <div v-show="form.provider === '0'" class="grid gap-2">
-        <label for="api_key" class="text-sm font-medium text-gray-700">API-ключ</label>
-        <input
-          id="api_key"
+      <!-- Настройки KaspiPay -->
+      <div v-if="form.provider === '0'" class="grid gap-4">
+        <TextInput
           v-model="form.api_key"
-          type="text"
+          id="api_key"
+          label="API-ключ"
           placeholder="Введите API-ключ"
-          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+          required
         />
-      </div>
-
-      <!-- ID торговой точки -->
-      <div v-show="form.provider === '0'" class="grid gap-2">
-        <label for="tradepoint_id" class="text-sm font-medium text-gray-700">
-          ID торговой точки
-        </label>
-        <input
+        <NumberInput
+          v-model="form.tradepoint_id"
           id="tradepoint_id"
-          v-model.number="form.tradepoint_id"
-          type="number"
+          label="ID торговой точки"
           placeholder="Введите ID торговой точки"
-          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
         />
+
+        <!-- Способы оплаты -->
+        <fieldset>
+          <legend class="text-sm font-medium text-gray-700">Способы оплаты</legend>
+          <div class="flex flex-wrap gap-4">
+            <SwitchInput
+              v-for="method in paymentMethods"
+              :key="method.value"
+              :value="method.value"
+              :label="method.label"
+              v-model="form.payment_methods"
+            />
+          </div>
+        </fieldset>
       </div>
 
-      <!-- Способы оплаты -->
-      <div v-show="form.provider === '0'" class="grid gap-2">
-        <label class="text-sm font-medium text-gray-700">Способы оплаты</label>
-        <div class="flex flex-wrap gap-4">
-          <label class="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              value="Gold"
-              v-model="form.payment_methods"
-              class="form-checkbox"
-            />
-            <span>GOLD</span>
-          </label>
-          <label class="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              value="Red"
-              v-model="form.payment_methods"
-              class="form-checkbox"
-            />
-            <span>RED</span>
-          </label>
-          <label class="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              value="Loan"
-              v-model="form.payment_methods"
-              class="form-checkbox"
-            />
-            <span>Кредит</span>
-          </label>
-        </div>
-      </div>
-
-      <!-- ID терминала -->
-      <div v-show="form.provider === '1'" class="grid gap-2">
-        <label for="pos_id" class="text-sm font-medium text-gray-700">ID терминала</label>
-        <input
-          id="pos_id"
+      <!-- Настройки Paymaster -->
+      <div v-if="form.provider === '1'" class="grid gap-4">
+        <TextInput
           v-model="form.pos_id"
-          type="text"
+          id="pos_id"
+          label="ID терминала"
           placeholder="Введите ID терминала"
-          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+          required
         />
-      </div>
-
-      <!-- Секретный ключ -->
-      <div v-show="form.provider === '1'" class="grid gap-2">
-        <label for="secret_key" class="text-sm font-medium text-gray-700"> Секретный ключ </label>
-        <input
-          id="secret_key"
+        <TextInput
           v-model="form.secret_key"
-          type="text"
+          id="secret_key"
+          label="Секретный ключ"
           placeholder="Введите секретный ключ"
-          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+          required
         />
       </div>
     </div>
 
-    <!-- Кнопка сохранить -->
+    <!-- Кнопка "Сохранить" -->
     <div class="pt-4">
-      <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
+      <button
+        type="submit"
+        class="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+      >
         Сохранить изменения
       </button>
     </div>
@@ -115,18 +90,28 @@
 <script setup>
 import { reactive } from 'vue'
 import CloseIcon from '../icons/CloseIcon.vue'
+import TextInput from '../TextInput.vue'
+import NumberInput from '../NumberInput.vue'
+import SwitchInput from '../SwitchInput.vue'
 
-// Начальные данные формы
+// Данные формы
 const form = reactive({
-  provider: '0', // Провайдер (KaspiPay по умолчанию)
+  provider: '0', // KaspiPay по умолчанию
   api_key: '',
   tradepoint_id: null,
-  payment_methods: ['Gold'], // Способы оплаты (GOLD по умолчанию)
+  payment_methods: ['Gold'], // По умолчанию включен GOLD
   pos_id: '',
   secret_key: '',
 })
 
-// Метод сохранения
+// Опции способов оплаты
+const paymentMethods = [
+  { value: 'Gold', label: 'GOLD' },
+  { value: 'Red', label: 'RED' },
+  { value: 'Loan', label: 'Кредит' },
+]
+
+// Сохранение настроек
 const saveSettings = () => {
   console.log('Отправленные данные:', form)
   alert('Настройки сохранены!')
@@ -134,7 +119,7 @@ const saveSettings = () => {
 </script>
 
 <style scoped>
-/* Стили для чекбоксов */
+/* Стили для модального окна */
 .form-checkbox:checked {
   border-color: #2563eb;
   background-color: #2563eb;
