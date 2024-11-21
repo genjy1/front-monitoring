@@ -51,8 +51,8 @@
 <script setup>
 import axios from 'axios'
 import HeaderComponent from '@/components/HeaderComponent.vue'
-import SuccessComponent from '@/components/SuccessComponent.vue'
-import ErrorMessageComponent from '@/components/ErrorMessageComponent.vue'
+import SuccessComponent from '@/components/messages/SuccessComponent.vue'
+import ErrorMessageComponent from '@/components/messages/ErrorMessageComponent.vue'
 import { ref } from 'vue'
 
 const message = ref('')

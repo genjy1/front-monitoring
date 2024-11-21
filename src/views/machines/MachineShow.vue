@@ -45,29 +45,29 @@ import TabsComponent from '@/components/TabsComponent.vue'
 import axios from 'axios'
 import { ref, onMounted, computed, defineProps, defineAsyncComponent } from 'vue'
 import { useRoute } from 'vue-router'
-import ErrorMessageComponent from '@/components/ErrorMessageComponent.vue'
+import ErrorMessageComponent from '@/components/messages/ErrorMessageComponent.vue'
 import Preloader from '@/components/Preloader.vue'
-import SettingsIcon from '@/components/SettingsIcon.vue'
-import SuccessComponent from '@/components/SuccessComponent.vue'
+import SettingsIcon from '@/components/icons/SettingsIcon.vue'
+import SuccessComponent from '@/components/messages/SuccessComponent.vue'
 
 const tabs = [
   {
     name: 'information',
     label: 'Информация',
     component: 'MachineInfo',
-    icon: defineAsyncComponent(() => import('@/components/InfoIcon.vue')),
+    icon: defineAsyncComponent(() => import('@/components/icons/InfoIcon.vue')),
   },
   {
     name: 'settings',
     label: 'Настройки автомата',
     component: 'MachineSettings',
-    icon: defineAsyncComponent(() => import('@/components/SettingsIcon.vue')),
+    icon: defineAsyncComponent(() => import('@/components/icons/SettingsIcon.vue')),
   },
   {
     name: 'monetary',
     label: 'Номиналы',
     component: 'MonetarySettings',
-    icon: defineAsyncComponent(() => import('@/components/MoneyIcon.vue')),
+    icon: defineAsyncComponent(() => import('@/components/icons/MoneyIcon.vue')),
   },
   // Можно добавить дополнительные табы в будущем
 ]

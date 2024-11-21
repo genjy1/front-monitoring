@@ -92,8 +92,8 @@
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 import HeaderComponent from '@/components/HeaderComponent.vue'
-import SuccessComponent from '@/components/SuccessComponent.vue'
-import DeleteIcon from '@/components/DeleteIcon.vue'
+import SuccessComponent from '@/components/messages/SuccessComponent.vue'
+import DeleteIcon from '@/components/icons/DeleteIcon.vue'
 import DialogWindow from '@/components/DialogWindow.vue'
 import Pagination from '@/components/Pagination.vue'
 

@@ -65,10 +65,10 @@
 <script setup>
 import { onMounted, ref, watchEffect } from 'vue'
 import axios from 'axios'
-import SuccessComponent from '@/components/SuccessComponent.vue'
-import ErrorComponent from '@/components/ErrorMessageComponent.vue'
+import SuccessComponent from '@/components/messages/SuccessComponent.vue'
+import ErrorComponent from '@/components/messages/ErrorMessageComponent.vue'
 import HeaderComponent from '@/components/HeaderComponent.vue'
-import Input from '@/components/Input.vue'
+import Input from '@/components/forms/Input.vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()

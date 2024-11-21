@@ -124,7 +124,7 @@
 
 <script setup>
 import HeaderComponent from '@/components/HeaderComponent.vue'
-import AccountStroke from '@/components/AccountStroke.vue'
+import AccountStroke from '@/components/icons/AccountStroke.vue'
 import { ref, watchEffect, onBeforeUnmount, onMounted } from 'vue'
 import axios from 'axios'
 import Pagination from '@/components/Pagination.vue'

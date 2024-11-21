@@ -48,7 +48,7 @@ import axios from 'axios'
 import HeaderComponent from '@/components/HeaderComponent.vue'
 import { useUserStore } from '@/stores/userStore'
 import { onMounted } from 'vue'
-import SubmitButton from '@/components/SubmitButton.vue'
+import SubmitButton from '@/components/forms/SubmitButton.vue'
 
 const userStore = useUserStore()
 

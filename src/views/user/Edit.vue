@@ -85,9 +85,9 @@ import { onMounted, ref, computed } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/userStore'
-import SubmitButton from '@/components/SubmitButton.vue'
-import EditInput from '@/components/Input.vue'
-import SuccessComponent from '@/components/SuccessComponent.vue'
+import SubmitButton from '@/components/forms/SubmitButton.vue'
+import EditInput from '@/components/forms/Input.vue'
+import SuccessComponent from '@/components/messages/SuccessComponent.vue'
 
 const userStore = useUserStore()
 const successMessage = ref('')

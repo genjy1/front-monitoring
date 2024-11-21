@@ -2,9 +2,9 @@
 import { onMounted, ref, watch } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
-import AccountStroke from './AccountStroke.vue'
+import AccountStroke from './icons/AccountStroke.vue'
 import Preloader from './Preloader.vue'
-import ProfileIcon from './ProfileIcon.vue'
+import ProfileIcon from './icons/ProfileIcon.vue'
 
 // Подключаем хранилище пользователя
 const userStore = useUserStore()

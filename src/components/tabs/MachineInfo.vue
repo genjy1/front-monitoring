@@ -48,7 +48,7 @@
 <script setup>
 import axios from 'axios'
 import { defineProps } from 'vue'
-import SubmitButton from './SubmitButton.vue'
+import SubmitButton from '../forms/SubmitButton.vue'
 import { useRoute } from 'vue-router'
 
 const props = defineProps({

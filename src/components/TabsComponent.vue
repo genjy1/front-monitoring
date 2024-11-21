@@ -28,9 +28,9 @@
 
 <script setup>
 import { computed } from 'vue'
-import MachineInfo from './MachineInfo.vue'
-import MachineSettings from './MachineSettings.vue'
-import MonetarySettings from './MonetarySettings.vue'
+import MachineInfo from './tabs/MachineInfo.vue'
+import MachineSettings from './tabs/MachineSettings.vue'
+import MonetarySettings from './tabs/MonetarySettings.vue'
 
 const props = defineProps({
   tabs: Array,

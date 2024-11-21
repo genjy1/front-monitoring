@@ -223,7 +223,7 @@ import { useUserStore } from '@/stores/userStore'
 import { useMachineStateColumnsStore } from '@/stores/machineStateColumns'
 import axios from 'axios'
 import { onMounted, ref, onBeforeUnmount } from 'vue'
-import AccountStroke from '@/components/AccountStroke.vue'
+import AccountStroke from '@/components/icons/AccountStroke.vue'
 
 const header = 'Состояние автоматов'
 const machines = ref([])

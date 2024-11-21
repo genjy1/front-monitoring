@@ -28,7 +28,7 @@
 <script setup>
 import { ref } from 'vue'
 import axios from 'axios'
-import SubmitButton from '@/components/SubmitButton.vue'
+import SubmitButton from '@/components/forms/SubmitButton.vue'
 
 const email = ref('')
 const message = ref(null)
