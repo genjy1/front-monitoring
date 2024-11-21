@@ -5,8 +5,7 @@
       <!-- Условие, чтобы подождать загрузки данных -->
       <div v-if="machine" class="sm:w-2/5">
         <div class="flex machine-header border-b mb-2 items-center">
-          <h1 class="text-2xl font-medium">Автомат #{{ machine.id }}</h1>
-          <button><SettingsIcon /></button>
+          <h1 class="text-2xl font-medium pb-2">Автомат #{{ machine.id }}</h1>
         </div>
 
         <SuccessComponent v-if="message" :message="message" @close="message = ''" />

@@ -1,9 +1,9 @@
 <template>
   <form @submit.prevent="saveSettings" class="space-y-6">
-    <div class="grid gap-6">
+    <div class="grid gap-6 border rounded-xl py-3">
       <!-- Номиналы купюр -->
-      <div>
-        <label class="block text-xl font-semibold text-gray-900">Номиналы купюр</label>
+      <div class="border-b">
+        <label class="block text-xl font-semibold text-gray-900 ml-4">Номиналы купюр</label>
         <table class="w-full text-sm text-left table-auto border-separate space-y-4">
           <thead>
             <tr class="border-b">
@@ -28,7 +28,7 @@
 
       <!-- Номиналы монет -->
       <div>
-        <label class="block text-xl font-semibold text-gray-900">Номиналы монет</label>
+        <label class="block text-xl font-semibold text-gray-900 ml-4">Номиналы монет</label>
         <table class="w-full text-sm text-left table-auto border-separate space-y-4">
           <thead>
             <tr class="border-b">
@@ -55,7 +55,7 @@
       <div class="pt-4">
         <button
           type="submit"
-          class="w-full py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          class="py-3 bg-blue-600 mx-4 px-[5.41rem] sm:px-[12.75rem] text-white font-medium rounded-md hover:bg-blue-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           Сохранить изменения
         </button>

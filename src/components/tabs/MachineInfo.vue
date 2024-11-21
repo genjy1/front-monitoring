@@ -1,7 +1,7 @@
 <template>
-  <form @submit.prevent="updateMachine">
+  <form @submit.prevent="updateMachine" class="border rounded-xl p-4">
     <ul>
-      <li class="border-y py-2 grid grid-cols-2">
+      <li class="border-b py-2 grid grid-cols-2">
         <span class="block"> ID автомата</span><span>{{ machine.id }}</span>
       </li>
       <li class="border-b py-2 grid grid-cols-2">
@@ -38,7 +38,7 @@
       <li class="border-b py-2 grid grid-cols-2">
         <span class="block">Имя автомата </span><input v-model="data.name" />
       </li>
-      <li class="border-b py-2 grid grid-cols-2">
+      <li class="py-2 grid grid-cols-2">
         <span class="block">Адрес </span><input v-model="data.address" />
       </li>
     </ul>
@@ -68,7 +68,6 @@ const updateMachine = async () => {
     Object.assign(props.machine, response.data)
 
     // Обновляем заголовок
-    // machineHeader.value = `Автомат #${machine.value.id}`
     // message.value = response.data.message
   } catch (error) {
     console.error('Ошибка при обновлении данных машины:', error)

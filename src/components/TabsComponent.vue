@@ -20,9 +20,11 @@
     </div>
 
     <!-- Содержимое активного таба -->
-    <div>
-      <component :is="activeTabContent" :machine="machine" :data="data" />
-    </div>
+    <transition name="fade" mode="out-in">
+      <div :key="activeTab" class="tab-content">
+        <component :is="activeTabContent" :machine="machine" :data="data" />
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -54,3 +56,14 @@ const activeTabContent = computed(() => {
   return tab ? components[tab.component] : null
 })
 </script>
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
