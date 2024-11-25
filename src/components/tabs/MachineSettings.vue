@@ -73,7 +73,7 @@
           <button class="text-left" type="button" @click="openModal('OnlineKassaModal')">
             Открыть настройки кассы</button
           ><button class="text-left" type="button" @click="openModal('QrModal')">
-            Открыт настройки QR оплаты
+            Открыть настройки QR оплаты
           </button>
         </div>
 
@@ -206,14 +206,13 @@ const getSettings = async () => {
 // Сохранение настроек
 const saveSettings = async () => {
   isLoading.value = true
-  const settings = settingsList.value.reduce(
-    (acc, item) => ({ ...acc, [item.key]: item.value.value }),
-    {
-      cleLogin: cleLogin.value,
-      clePassword: clePassword.value,
-      drawerCapacity: drawerCapacity.value,
-    },
-  )
+  const settings = settingsList.value.reduce((acc, item) => ({ ...acc, [item.key]: item.value }), {
+    cleLogin: cleLogin.value,
+    clePassword: clePassword.value,
+    drawerCapacity: drawerCapacity.value,
+  })
+
+  console.log(settings)
 
   try {
     await axios.post(`/machine/${id}/settings/post`, settings)
