@@ -3,7 +3,7 @@
     <!-- Модальные окна -->
     <div
       v-if="isModalOpen"
-      class="modal absolute w-screen top-0 left-0 h-screen backdrop-blur-sm backdrop-contrast-50 transition-all"
+      class="modal fixed w-screen top-0 left-0 h-screen backdrop-blur-sm backdrop-contrast-50 transition-all overflow-hidden z-[9999]"
       @click="closeModals"
     >
       <component
@@ -23,7 +23,7 @@
             <div class="text-gray-700 font-medium" :title="setting.title">
               {{ setting.label }}
             </div>
-            <ToggleSwitch v-model="setting.value" />
+            <ToggleSwitch v-model="setting.value" :isModalOpen="isModalOpen" />
           </div>
 
           <!-- Эквайринг. Логин -->
@@ -69,6 +69,14 @@
           </div>
         </div>
 
+        <div class="modals-wrapper grid grid-rows-2 justify-start mt-2 gap-2">
+          <button class="text-left" type="button" @click="openModal('OnlineKassaModal')">
+            Открыть настройки кассы</button
+          ><button class="text-left" type="button" @click="openModal('QrModal')">
+            Открыт настройки QR оплаты
+          </button>
+        </div>
+
         <div class="mt-6">
           <button
             :disabled="isLoading"
@@ -97,6 +105,10 @@ import OnlineKassaModal from '../kassa/OnlineKassaModal.vue'
 import QrPaymentModal from '../kassa/QrPaymentModal.vue'
 
 // Модальные окна
+
+markRaw(OnlineKassaModal)
+markRaw(QrPaymentModal)
+
 const isModalOpen = ref(false)
 const activeModal = ref(null)
 

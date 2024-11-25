@@ -58,7 +58,7 @@ watch(
 )
 </script>
 <template>
-  <header class="border-b bg-white border-gray-200 text-[#777] w-full top-0 fixed">
+  <header class="border-b bg-white border-gray-200 text-[#777] w-full top-0 fixed z-[999]">
     <div class="mx-auto my-0 w-4/5 py-4 items-center justify-between flex">
       <router-link
         to="/"

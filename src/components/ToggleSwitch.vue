@@ -1,5 +1,5 @@
 <template>
-  <label class="flex items-center cursor-pointer">
+  <label class="flex items-center cursor-pointer gap-2">
     <input
       type="checkbox"
       :checked="modelValue"
@@ -7,15 +7,20 @@
       class="hidden"
     />
     <div
-      :class="modelValue ? 'bg-green-500' : 'bg-gray-400'"
-      class="relative w-12 h-6 rounded-full shadow-inner"
+      :class="[
+        modelValue ? 'bg-green-500' : 'bg-gray-400',
+        isModalOpen ? '-z-50' : '',
+        'relative w-12 h-6 rounded-full shadow-inner',
+      ]"
     >
       <span
-        :class="modelValue ? 'translate-x-full' : 'translate-x-0'"
-        class="absolute block w-6 h-6 bg-white rounded-full shadow transition-transform duration-200"
+        :class="[
+          modelValue ? 'translate-x-full' : 'translate-x-0',
+          'absolute block w-6 h-6 bg-white rounded-full shadow transition-transform duration-200',
+        ]"
       ></span>
     </div>
-    <span class="ml-3 text-gray-600">{{ modelValue ? 'ВКЛ' : 'ВЫКЛ' }}</span>
+    <span class="text-gray-600 selection:bg-none">{{ modelValue ? 'ВКЛ' : 'ВЫКЛ' }}</span>
   </label>
 </template>
 
@@ -27,6 +32,10 @@ defineProps({
   modelValue: {
     type: Boolean,
     required: true,
+  },
+  isModalOpen: {
+    type: Boolean,
+    default: false,
   },
 })
 </script>

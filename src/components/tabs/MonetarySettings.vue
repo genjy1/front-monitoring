@@ -1,140 +1,132 @@
 <template>
-  <form @submit.prevent="saveSettings" class="space-y-6">
+  <form @submit.prevent="saveSettings()" class="space-y-6">
     <div class="grid gap-6 border rounded-xl py-3">
       <!-- Номиналы купюр -->
-      <div class="border-b">
-        <label class="block text-xl font-semibold text-gray-900 ml-4">Номиналы купюр</label>
-        <table class="w-full text-sm text-left table-auto border-separate space-y-4">
-          <thead>
-            <tr class="border-b">
-              <th class="py-2 px-4 text-gray-600">Номинал</th>
-              <th class="py-2 px-4 text-gray-600">Статус</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(bill, index) in bills" :key="index" class="transition-all hover:bg-gray-50">
-              <td class="py-3 px-4">{{ bill.value }}₸</td>
-              <td class="py-3 px-4">
-                <label class="inline-flex items-center cursor-pointer">
-                  <!-- Переключатель для номиналов купюр -->
-                  <input type="checkbox" v-model="bill.enabled" class="toggle-switch" />
-                  <span class="ml-2 text-gray-700">{{ bill.enabled ? 'ВКЛ' : 'ВЫКЛ' }}</span>
-                </label>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <TableComponent title="Номиналы купюр" :items="bills" @update:itemState="updateBillState" />
 
       <!-- Номиналы монет -->
-      <div>
-        <label class="block text-xl font-semibold text-gray-900 ml-4">Номиналы монет</label>
-        <table class="w-full text-sm text-left table-auto border-separate space-y-4">
-          <thead>
-            <tr class="border-b">
-              <th class="py-2 px-4 text-gray-600">Номинал</th>
-              <th class="py-2 px-4 text-gray-600">Статус</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(coin, index) in coins" :key="index" class="transition-all hover:bg-gray-50">
-              <td class="py-3 px-4">{{ coin.value }}₸</td>
-              <td class="py-3 px-4">
-                <label class="inline-flex items-center cursor-pointer">
-                  <!-- Переключатель для номиналов монет -->
-                  <input type="checkbox" v-model="coin.enabled" class="toggle-switch" />
-                  <span class="ml-2 text-gray-700">{{ coin.enabled ? 'ВКЛ' : 'ВЫКЛ' }}</span>
-                </label>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <TableComponent title="Номиналы монет" :items="coins" @update:itemState="updateCoinState" />
 
       <!-- Кнопка сохранить -->
       <div class="pt-4">
         <button
           type="submit"
-          class="py-3 bg-blue-600 mx-4 px-[5.41rem] sm:px-[12.75rem] text-white font-medium rounded-md hover:bg-blue-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          :disabled="isLoading"
+          :class="[
+            'py-3 mx-4 px-[5.41rem] sm:px-[12.75rem] text-white font-medium rounded-md transition duration-200',
+            isHovered ? 'bg-blue-700' : 'bg-blue-600',
+            'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed',
+          ]"
+          @mouseover="isHovered = true"
+          @mouseleave="isHovered = false"
         >
-          Сохранить изменения
+          {{ isLoading ? 'Сохранение...' : 'Сохранить изменения' }}
         </button>
+        <p v-if="saveMessage" class="text-green-500 text-center">{{ saveMessage }}</p>
       </div>
     </div>
   </form>
 </template>
 
 <script setup>
-import { reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
+import TableComponent from '../monetary/TableComponent.vue' // Импортируем компонент таблицы
+import axios from 'axios'
+import { useRoute } from 'vue-router'
 
-// Начальные данные для номиналов купюр
+// Состояние для кнопки "Сохранить изменения"
+const isHovered = ref(false)
+const isLoading = ref(false)
+const saveMessage = ref('')
+
+// Данные для номиналов купюр
 const bills = reactive([
   { value: 10, enabled: false },
-  { value: 50, enabled: true },
-  { value: 100, enabled: true },
+  { value: 50, enabled: false },
+  { value: 100, enabled: false },
   { value: 500, enabled: false },
   { value: 1000, enabled: false },
   { value: 200, enabled: false },
   { value: 2000, enabled: false },
 ])
 
-// Начальные данные для номиналов монет
+// Данные для номиналов монет
 const coins = reactive([
-  { value: 1, enabled: true },
-  { value: 2, enabled: true },
-  { value: 5, enabled: true },
-  { value: 10, enabled: true },
+  { value: 1, enabled: false },
+  { value: 2, enabled: false },
+  { value: 5, enabled: false },
+  { value: 10, enabled: false },
 ])
 
-// Метод для сохранения данных
-const saveSettings = () => {
-  const settings = {
-    bills: bills.filter((bill) => bill.enabled).map((bill) => bill.value),
-    coins: coins.filter((coin) => coin.enabled).map((coin) => coin.value),
+// Обновляем состояние для купюр
+const updateBillState = ({ index, value }) => {
+  bills[index].enabled = value
+}
+
+// Обновляем состояние для монет
+const updateCoinState = ({ index, value }) => {
+  coins[index].enabled = value
+}
+
+// Функция для фильтрации значений
+const filterEnabledValues = (list) => list.filter((item) => item.enabled).map((item) => item.value)
+
+const route = useRoute()
+const id = route.params.id
+
+const getSettings = async () => {
+  try {
+    const response = await axios.get(`/machine/${id}/settings`)
+
+    // Извлекаем данные для номиналов купюр и монет
+    const gottenBills = response.data.bills.bills
+    const gottenCoins = response.data.bills.coins
+
+    // Обновляем массивы bills и coins, сохраняя оба значения (value и enabled)
+    bills.splice(
+      0,
+      bills.length,
+      ...gottenBills.map((bill) => ({
+        value: bill.value,
+        enabled: bill.enabled ?? false, // Если нет свойства enabled, устанавливаем его как false
+      })),
+    )
+
+    coins.splice(
+      0,
+      coins.length,
+      ...gottenCoins.map((coin) => ({
+        value: coin.value,
+        enabled: coin.enabled ?? true, // Если нет свойства enabled, устанавливаем его как true
+      })),
+    )
+  } catch (error) {
+    console.error('Ошибка при получении настроек:', error)
   }
-  console.log('Сохраненные данные:', settings)
-  alert('Настройки сохранены!')
 }
+
+const saveSettings = async () => {
+  // Подготовка данных, которые будут отправлены на сервер
+  const settingsData = {
+    bills: bills.map((bill) => ({ value: bill.value, enabled: bill.enabled })),
+    coins: coins.map((coin) => ({ value: coin.value, enabled: coin.enabled })),
+  }
+
+  try {
+    // Отправка PATCH-запроса с данными
+    const response = await axios.patch(`/machine/${id}/settings/bills`, settingsData)
+
+    Object.assign(bills, response.data.bills.bills)
+    Object.assign(coins, response.data.bills.coins)
+    // Логирование ответа от сервера
+    console.log(response.data.bills)
+  } catch (error) {
+    // Обработка ошибок
+    console.error('Ошибка при сохранении настроек:', error)
+  }
+}
+
+onMounted(() => {
+  getSettings()
+})
 </script>
-
-<style scoped>
-/* Стиль для переключателей */
-.toggle-switch {
-  appearance: none;
-  width: 50px;
-  height: 26px;
-  background-color: #d1d5db;
-  border-radius: 9999px;
-  position: relative;
-  transition: background-color 0.3s ease;
-}
-
-.toggle-switch:checked {
-  background-color: #2563eb; /* Синий цвет для включенного состояния */
-}
-
-.toggle-switch:checked::before {
-  transform: translateX(24px); /* Сдвигаем "мячик" при включении */
-}
-
-.toggle-switch::before {
-  content: '';
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 20px;
-  height: 20px;
-  background-color: white;
-  border-radius: 50%;
-  transition: transform 0.3s ease;
-}
-
-button:hover {
-  background-color: #2563eb; /* Цвет при наведении */
-}
-
-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* Добавляем эффект фокуса для кнопок */
-}
-</style>
