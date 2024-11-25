@@ -118,8 +118,6 @@ const saveSettings = async () => {
 
     Object.assign(bills, response.data.bills.bills)
     Object.assign(coins, response.data.bills.coins)
-    // Логирование ответа от сервера
-    console.log(response.data.bills)
   } catch (error) {
     // Обработка ошибок
     console.error('Ошибка при сохранении настроек:', error)

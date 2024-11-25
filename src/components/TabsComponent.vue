@@ -33,6 +33,7 @@ import { computed } from 'vue'
 import MachineInfo from './tabs/MachineInfo.vue'
 import MachineSettings from './tabs/MachineSettings.vue'
 import MonetarySettings from './tabs/MonetarySettings.vue'
+import Journals from './tabs/Journals.vue'
 
 const props = defineProps({
   tabs: Array,
@@ -48,6 +49,7 @@ const components = {
   MachineInfo,
   MachineSettings,
   MonetarySettings,
+  Journals,
 }
 
 // Вычисляемое содержимое активного таба
