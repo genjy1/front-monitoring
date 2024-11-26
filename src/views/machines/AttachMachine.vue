@@ -7,13 +7,20 @@
     <hr class="my-4" />
     <p>
       Для выполнения привязки предварительно разрешите автомату подключение к сети и работу
-      <br />
+      <br class="pb-2" />
       мониторинга. Привязка осуществляется по ID контроллера автомата и ID текущей сессии. <br />
       ID контроллера автомата выводится в меню
-      <span class="highlight bg-[#FCF8E3]">Настройки > Автомат > Инфо > ID контроллера</span>.
-      <br />
+      <span
+        class="highlight border px-2 rounded-md border-red-600 hover:bg-red-600 hover:text-white cursor-default"
+        >Настройки > Автомат > Инфо > ID контроллера</span
+      >.
+      <br class="pb-2" />
       ID текущей сессии выводится в меню
-      <span class="highlight bg-[#FCF8E3]">Настройки > Мониторинг > Показать UID</span>. <br />
+      <span
+        class="highlight border px-2 rounded-md border-red-600 hover:bg-red-600 hover:text-white cursor-default"
+        >Настройки > Мониторинг > Показать UID</span
+      >.
+      <br class="pb-2" />
       Обратите внимание, что ID сессии
       <b>изменится</b>
       сразу после перезапуска автомата!

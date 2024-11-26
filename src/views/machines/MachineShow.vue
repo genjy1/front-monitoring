@@ -1,9 +1,9 @@
 <template>
   <div>
     <HeaderComponent />
-    <div class="container mt-24 mx-auto my-0 w-4/5">
+    <div class="container mt-[5.5rem] mx-auto my-0 w-4/5 sm:grid sm:grid-cols-2 justify-stretch">
       <!-- Условие, чтобы подождать загрузки данных -->
-      <div v-if="machine" class="sm:w-2/5">
+      <div v-if="machine" class="machine-info">
         <div class="flex machine-header border-b mb-2 items-center">
           <h1 class="text-2xl font-medium pb-2">Автомат #{{ machine.id }}</h1>
         </div>
@@ -34,6 +34,9 @@
         />
       </div>
       <Preloader v-else class="relative left-[50vmax] mt-96" />
+      <div
+        class="hidden sm:block machine-img bg-[url('https://vend-shop.com/image/cache/catalog/SM%206367%20Original/sm-vendor-lond-vendshop-torgovyj-avtomat-left-350x650.png')] w-auto h-[824px] bg-contain bg-center bg-no-repeat"
+      ></div>
     </div>
   </div>
 </template>
@@ -46,7 +49,6 @@ import { ref, onMounted, computed, defineProps, defineAsyncComponent } from 'vue
 import { useRoute } from 'vue-router'
 import ErrorMessageComponent from '@/components/messages/ErrorMessageComponent.vue'
 import Preloader from '@/components/Preloader.vue'
-import SettingsIcon from '@/components/icons/SettingsIcon.vue'
 import SuccessComponent from '@/components/messages/SuccessComponent.vue'
 
 const tabs = [
@@ -67,6 +69,12 @@ const tabs = [
     label: 'Номиналы',
     component: 'MonetarySettings',
     icon: defineAsyncComponent(() => import('@/components/icons/MoneyIcon.vue')),
+  },
+  {
+    name: 'journals',
+    label: 'Журналы',
+    component: 'Journals',
+    icon: defineAsyncComponent(() => import('@/components/icons/JournalIcon.vue')),
   },
   // Можно добавить дополнительные табы в будущем
 ]

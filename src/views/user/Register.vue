@@ -12,7 +12,7 @@ const timezones = Intl.supportedValuesOf('timeZone')
 const user = ref({
   fio: '',
   user_name: '',
-  user_email: '',
+  email: '',
   password: '',
   password_confirmation: '',
   tz: '',
@@ -81,7 +81,7 @@ const register = async () => {
           <div class="input-group mb-4">
             <label for="email" class="mb-2 block">Электронная почта</label>
             <input
-              v-model="user.user_email"
+              v-model="user.email"
               type="email"
               id="email"
               class="border-2 border-transparent focus:outline-none rounded px-4 py-2 w-full bg-[#E8F0FE]"

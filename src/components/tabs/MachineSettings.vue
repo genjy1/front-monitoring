@@ -3,7 +3,7 @@
     <!-- Модальные окна -->
     <div
       v-if="isModalOpen"
-      class="modal absolute w-screen top-0 left-0 h-screen backdrop-blur-sm backdrop-contrast-50 transition-all"
+      class="modal fixed w-screen top-0 left-0 h-screen backdrop-blur-sm backdrop-contrast-50 transition-all overflow-hidden z-[9999]"
       @click="closeModals"
     >
       <component
@@ -15,189 +15,253 @@
     </div>
 
     <!-- Основные настройки -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border border-gray-300 rounded-lg p-4">
-      <div v-for="(item, index) in settings" :key="index" class="flex flex-col gap-1">
-        <label :title="item.tooltip" class="text-sm font-medium text-gray-700">
-          {{ item.label }}
-        </label>
+    <div class="my-4 border rounded-2xl p-4">
+      <!-- Таблица настроек -->
+      <form @submit.prevent="settingsLoaded ? updateSettings() : saveSettings()">
+        <div class="grid grid-cols-2 gap-y-4 gap-x-6">
+          <div v-for="(setting, index) in settingsList" :key="index">
+            <div class="text-gray-700 font-medium" :title="setting.title">
+              {{ setting.label }}
+            </div>
+            <ToggleSwitch v-model="setting.value" :isModalOpen="isModalOpen" />
+          </div>
 
-        <!-- Switch -->
-        <div
-          v-if="item.type === 'switch'"
-          class="flex items-center"
-          :class="isModalOpen ? '-z-50' : ''"
-        >
-          <label class="relative inline-flex items-center cursor-pointer">
+          <!-- Эквайринг. Логин -->
+          <div class="text-gray-700 font-medium" title="Логин (для терминалов 2CAN)">
+            Эквайринг. Логин
+          </div>
+          <div>
             <input
-              type="checkbox"
-              class="sr-only peer"
-              :checked="item.value"
-              @change="toggleSwitch(index)"
+              type="text"
+              v-model="cleLogin"
+              placeholder="Эквайринг. Логин"
+              class="w-full p-2 border border-gray-300 rounded-md"
             />
-            <div
-              class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
-            ></div>
-            <span class="ml-2 text-sm text-gray-700">
-              {{ item.value ? 'ВКЛ' : 'ВЫКЛ' }}
-            </span>
-          </label>
+          </div>
+
+          <!-- Эквайринг. Пароль -->
+          <div class="text-gray-700 font-medium" title="Секретный ключ (для терминалов 2CAN)">
+            Эквайринг. Пароль
+          </div>
+          <div>
+            <input
+              type="password"
+              v-model="clePassword"
+              placeholder="Эквайринг. Пароль"
+              class="w-full p-2 border border-gray-300 rounded-md"
+            />
+          </div>
+
+          <!-- Емкость денежного ящика -->
+          <div
+            class="text-gray-700 font-medium"
+            title="Максимальное количество монет в денежном ящике"
+          >
+            Емкость денежного ящика
+          </div>
+          <div>
+            <input
+              type="number"
+              v-model="drawerCapacity"
+              placeholder="Емкость денежного ящика"
+              class="w-full p-2 border border-gray-300 rounded-md"
+            />
+          </div>
         </div>
 
-        <!-- Текстовое поле -->
-        <input
-          v-else-if="item.type === 'text'"
-          v-model="item.value"
-          type="text"
-          :placeholder="item.placeholder"
-          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
-        />
+        <div class="modals-wrapper grid grid-rows-2 justify-start mt-2 gap-2">
+          <button class="text-left" type="button" @click="openModal('OnlineKassaModal')">
+            Открыть настройки кассы</button
+          ><button class="text-left" type="button" @click="openModal('QrModal')">
+            Открыть настройки QR оплаты
+          </button>
+        </div>
 
-        <!-- Числовое поле -->
-        <input
-          v-else-if="item.type === 'number'"
-          v-model.number="item.value"
-          type="number"
-          :placeholder="item.placeholder"
-          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
-        />
-
-        <!-- Кнопка открытия модального окна -->
-        <button
-          v-else-if="item.type === 'link'"
-          @click="openModal(item.modal)"
-          class="text-blue-600 hover:underline block text-left outline-none"
-        >
-          {{ item.linkText }}
-        </button>
-      </div>
+        <div class="mt-6">
+          <button
+            :disabled="isLoading"
+            class="px-4 py-2 bg-blue-500 text-white rounded-md w-full sm:w-auto"
+          >
+            {{
+              isLoading
+                ? 'Загрузка...'
+                : settingsLoaded
+                  ? 'Обновить настройки'
+                  : 'Сохранить настройки'
+            }}
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, markRaw } from 'vue'
+import { useRoute } from 'vue-router'
+import axios from 'axios'
+import ToggleSwitch from '../ToggleSwitch.vue'
 import OnlineKassaModal from '../kassa/OnlineKassaModal.vue'
 import QrPaymentModal from '../kassa/QrPaymentModal.vue'
 
-const settings = reactive([
-  {
-    label: 'Монетоприемник',
-    tooltip: 'Включение или выключение монетоприемника',
-    type: 'switch',
-    value: false,
-  },
-  {
-    label: 'Купюроприемник',
-    tooltip: 'Включение или выключение купюроприемника',
-    type: 'switch',
-    value: false,
-  },
-  {
-    label: 'Модуль рециклинга',
-    tooltip: 'Включение или выключение модуля рециклинга купюр',
-    type: 'switch',
-    value: false,
-  },
-  {
-    label: 'Эквайринг',
-    tooltip: 'Включение или выключение модуля безналичной оплаты',
-    type: 'switch',
-    value: true,
-  },
-  {
-    label: 'Эквайринг. Логин',
-    tooltip: 'Логин (для терминалов 2CAN)',
-    type: 'text',
-    value: '',
-    placeholder: 'Эквайринг. Логин',
-  },
-  {
-    label: 'Эквайринг. Пароль',
-    tooltip: 'Секретный ключ (для терминалов 2CAN)',
-    type: 'text',
-    value: '',
-    placeholder: 'Эквайринг. Пароль',
-  },
-  {
-    label: 'QR-платежи',
-    tooltip: 'Включение или выключение платежей по QR-коду',
-    type: 'switch',
-    value: false,
-  },
-  {
-    label: 'Режим одной продажи',
-    tooltip: 'Автоматически выдавать сдачу после выдачи одного товара',
-    type: 'switch',
-    value: true,
-  },
-  {
-    label: 'Возможность размена',
-    tooltip: 'Разрешить выдачу сдачи без покупки (размен купюр)',
-    type: 'switch',
-    value: true,
-  },
-  {
-    label: 'Емкость денежного ящика',
-    tooltip: 'Максимальное количество монет в денежном ящике',
-    type: 'number',
-    value: 800,
-    placeholder: 'Емкость денежного ящика',
-  },
-  {
-    label: 'Кассовый аппарат',
-    tooltip: 'Включение или выключение контрольно-кассовой машины',
-    type: 'switch',
-    value: true,
-  },
-  {
-    label: 'Параметры онлайн-кассы',
-    tooltip: '',
-    type: 'link',
-    modal: 'OnlineKassaModal',
-    linkText: 'Открыть настройки',
-  },
-  {
-    label: 'Параметры QR-платежей',
-    tooltip: '',
-    type: 'link',
-    modal: 'QrPaymentModal',
-    linkText: 'Открыть настройки',
-  },
-])
+// Модальные окна
+
+markRaw(OnlineKassaModal)
+markRaw(QrPaymentModal)
 
 const isModalOpen = ref(false)
 const activeModal = ref(null)
 
+// Реактивные значения
+const settingsLoaded = ref(false)
+const isLoading = ref(false)
+const route = useRoute()
+const id = route.params.id
+const cleLogin = ref('')
+const clePassword = ref('')
+const drawerCapacity = ref(0)
+
+const settingsList = ref([
+  {
+    key: 'cvEnabled',
+    label: 'Монетоприемник',
+    title: 'Включение или выключение монетоприемника',
+    value: ref(false),
+  },
+  {
+    key: 'bvEnabled',
+    label: 'Купюроприемник',
+    title: 'Включение или выключение купюроприемника',
+    value: ref(false),
+  },
+  {
+    key: 'rcEnabled',
+    label: 'Модуль рециклинга',
+    title: 'Включение или выключение модуля рециклинга купюр',
+    value: ref(false),
+  },
+  {
+    key: 'cleEnabled',
+    label: 'Эквайринг',
+    title: 'Включение или выключение модуля безналичной оплаты',
+    value: ref(false),
+  },
+  {
+    key: 'qrPaymentEnabled',
+    label: 'QR-платежи',
+    title: 'Включение или выключение платежей по QR-коду',
+    value: ref(false),
+  },
+  {
+    key: 'oneSale',
+    label: 'Режим одной продажи',
+    title: 'Автоматически выдавать сдачу после выдачи одного товара',
+    value: ref(false),
+  },
+  {
+    key: 'freeChange',
+    label: 'Возможность размена',
+    title: 'Разрешить выдачу сдачи без покупки (размен купюр)',
+    value: ref(false),
+  },
+  {
+    key: 'kkmEnabled',
+    label: 'Кассовый аппарат',
+    title: 'Включение или выключение контрольно-кассовой машины',
+    value: ref(false),
+  },
+])
+
+// Получение настроек
+const getSettings = async () => {
+  isLoading.value = true
+  try {
+    const response = await axios.get(`/machine/${id}/settings`)
+    if (response.status === 200 && response.data && response.data.settings) {
+      const settings = response.data.settings
+
+      settingsList.value.forEach((item) => {
+        if (typeof item.value === 'object' && 'value' in item.value) {
+          // Если item.value — это ref, обновляем значение
+          item.value.value = settings[item.key] ?? false
+        } else {
+          // Если item.value не ref, преобразуем в ref
+          item.value = ref(settings[item.key] ?? false)
+          // console.warn(`Преобразовано в ref:`, item)
+        }
+      })
+
+      cleLogin.value = settings.cleLogin ?? ''
+      clePassword.value = settings.clePassword ?? ''
+      drawerCapacity.value = settings.drawerCapacity ?? 0
+      settingsLoaded.value = true
+    }
+  } catch (error) {
+    console.error('Ошибка при загрузке настроек:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// Сохранение настроек
+// Сохранение настроек
+const saveSettings = async () => {
+  isLoading.value = true
+  const settings = settingsList.value.reduce((acc, item) => ({ ...acc, [item.key]: item.value }), {
+    cleLogin: cleLogin.value,
+    clePassword: clePassword.value,
+    drawerCapacity: drawerCapacity.value,
+  })
+
+  const payload = { settings } // Оборачиваем данные в объект с ключом "settings"
+
+  console.log(payload) // Для проверки отправляемых данных
+
+  try {
+    await axios.post(`/machine/${id}/settings/post`, payload) // Отправляем данные с ключом "settings"
+    settingsLoaded.value = true
+  } catch (error) {
+    console.error('Ошибка сохранения настроек:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// Обновление настроек
+const updateSettings = async () => {
+  isLoading.value = true
+  const settings = settingsList.value.reduce((acc, item) => ({ ...acc, [item.key]: item.value }), {
+    cleLogin: cleLogin.value,
+    clePassword: clePassword.value,
+    drawerCapacity: drawerCapacity.value,
+  })
+
+  const payload = { settings } // Оборачиваем данные в объект с ключом "settings"
+
+  try {
+    await axios.patch(`/machine/${id}/settings/update`, payload) // Отправляем данные с ключом "settings"
+  } catch (error) {
+    console.error('Ошибка обновления настроек:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// Управление модальными окнами
 const closeModals = () => {
   isModalOpen.value = false
   activeModal.value = null
 }
 
-const openModal = (modal) => {
-  if (modal === 'OnlineKassaModal') {
-    activeModal.value = OnlineKassaModal
-  } else if (modal === 'QrPaymentModal') {
-    activeModal.value = QrPaymentModal
-  }
+const openModal = async (modal) => {
+  activeModal.value =
+    modal === 'OnlineKassaModal'
+      ? (await import('../kassa/OnlineKassaModal.vue')).default
+      : (await import('../kassa/QrPaymentModal.vue')).default
+
   isModalOpen.value = true
 }
 
-const toggleSwitch = (index) => {
-  settings[index].value = !settings[index].value
-}
-
-const handleEscape = (event) => {
-  if (event.key === 'Escape') {
-    closeModals()
-  }
-}
-
-// Подписка на события
-onMounted(() => {
-  window.addEventListener('keydown', handleEscape)
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('keydown', handleEscape)
-})
+// Хуки
+onMounted(getSettings)
 </script>
