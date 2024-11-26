@@ -1,3 +1,4 @@
+``
 <template>
   <!-- Заголовок списка -->
   <div class="head grid-cols-7 border-t hidden sm:grid">
