@@ -1,7 +1,7 @@
 <template>
   <div>
     <HeaderComponent />
-    <div class="container mt-24 mx-auto my-0 w-4/5 sm:grid sm:grid-cols-2 justify-stretch">
+    <div class="container mt-[5.5rem] mx-auto my-0 w-4/5 sm:grid sm:grid-cols-2 justify-stretch">
       <!-- Условие, чтобы подождать загрузки данных -->
       <div v-if="machine" class="machine-info">
         <div class="flex machine-header border-b mb-2 items-center">
