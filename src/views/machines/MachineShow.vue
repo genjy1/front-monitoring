@@ -12,7 +12,8 @@
 
         <ErrorMessageComponent
           v-if="machine.status !== 'Online'"
-          :text="'Нет связи с автоматом. Удаленное управление недоступно'"
+          :text="errorText"
+          @close="errorText = ''"
         />
 
         <!-- Проверка на истечение подписки -->
@@ -51,6 +52,7 @@ import ErrorMessageComponent from '@/components/messages/ErrorMessageComponent.v
 import Preloader from '@/components/Preloader.vue'
 import SuccessComponent from '@/components/messages/SuccessComponent.vue'
 
+const errorText = ref('Нет связи с автоматом. Удаленное управление недоступно')
 const tabs = [
   {
     name: 'information',
@@ -76,7 +78,12 @@ const tabs = [
     component: 'Journals',
     icon: defineAsyncComponent(() => import('@/components/icons/JournalIcon.vue')),
   },
-  // Можно добавить дополнительные табы в будущем
+  {
+    name: 'positions',
+    label: 'Позиции',
+    component: 'Positions',
+    icon: defineAsyncComponent(() => import('@/components/icons/SettingsIcon.vue')),
+  },
 ]
 const route = useRoute()
 const machine = ref(false)
