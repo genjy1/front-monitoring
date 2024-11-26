@@ -23,6 +23,7 @@
           {{ isLoading ? 'Сохранение...' : 'Сохранить изменения' }}
         </button>
         <p v-if="saveMessage" class="text-green-500 text-center">{{ saveMessage }}</p>
+        <p v-if="errorMessage" class="text-red-500 text-center">{{ errorMessage }}</p>
       </div>
     </div>
   </form>
@@ -38,6 +39,7 @@ import { useRoute } from 'vue-router'
 const isHovered = ref(false)
 const isLoading = ref(false)
 const saveMessage = ref('')
+const errorMessage = ref('')
 
 // Данные для номиналов купюр
 const bills = reactive([
@@ -74,13 +76,14 @@ const filterEnabledValues = (list) => list.filter((item) => item.enabled).map((i
 const route = useRoute()
 const id = route.params.id
 
+// Получаем настройки с сервера
 const getSettings = async () => {
   try {
     const response = await axios.get(`/machine/${id}/settings`)
 
-    // Извлекаем данные для номиналов купюр и монет
-    const gottenBills = response.data.bills.bills
-    const gottenCoins = response.data.bills.coins
+    // Проверка на пустые значения
+    const gottenBills = response.data.bills?.bills || []
+    const gottenCoins = response.data.bills?.coins || []
 
     // Обновляем массивы bills и coins, сохраняя оба значения (value и enabled)
     bills.splice(
@@ -102,9 +105,11 @@ const getSettings = async () => {
     )
   } catch (error) {
     console.error('Ошибка при получении настроек:', error)
+    errorMessage.value = 'Ошибка при получении настроек'
   }
 }
 
+// Функция для сохранения настроек
 const saveSettings = async () => {
   // Подготовка данных, которые будут отправлены на сервер
   const settingsData = {
@@ -114,16 +119,28 @@ const saveSettings = async () => {
 
   try {
     // Отправка PATCH-запроса с данными
+    isLoading.value = true
     const response = await axios.patch(`/machine/${id}/settings/bills`, settingsData)
 
+    // Обновление данных
     Object.assign(bills, response.data.bills.bills)
     Object.assign(coins, response.data.bills.coins)
+
+    // Уведомление об успешном сохранении
+    saveMessage.value = 'Настройки успешно сохранены!'
+    errorMessage.value = '' // Очистка сообщения об ошибке
   } catch (error) {
+    isLoading.value = false
+    saveMessage.value = '' // Очистка сообщения о сохранении
     // Обработка ошибок
+    errorMessage.value = error.response?.data?.message || 'Ошибка при сохранении настроек'
     console.error('Ошибка при сохранении настроек:', error)
+  } finally {
+    isLoading.value = false
   }
 }
 
+// Загружаем настройки при монтировании компонента
 onMounted(() => {
   getSettings()
 })

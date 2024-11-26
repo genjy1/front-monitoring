@@ -204,6 +204,7 @@ const getSettings = async () => {
 }
 
 // Сохранение настроек
+// Сохранение настроек
 const saveSettings = async () => {
   isLoading.value = true
   const settings = settingsList.value.reduce((acc, item) => ({ ...acc, [item.key]: item.value }), {
@@ -212,10 +213,12 @@ const saveSettings = async () => {
     drawerCapacity: drawerCapacity.value,
   })
 
-  console.log(settings)
+  const payload = { settings } // Оборачиваем данные в объект с ключом "settings"
+
+  console.log(payload) // Для проверки отправляемых данных
 
   try {
-    await axios.post(`/machine/${id}/settings/post`, settings)
+    await axios.post(`/machine/${id}/settings/post`, payload) // Отправляем данные с ключом "settings"
     settingsLoaded.value = true
   } catch (error) {
     console.error('Ошибка сохранения настроек:', error)
@@ -233,8 +236,10 @@ const updateSettings = async () => {
     drawerCapacity: drawerCapacity.value,
   })
 
+  const payload = { settings } // Оборачиваем данные в объект с ключом "settings"
+
   try {
-    await axios.patch(`/machine/${id}/settings/update`, settings)
+    await axios.patch(`/machine/${id}/settings/update`, payload) // Отправляем данные с ключом "settings"
   } catch (error) {
     console.error('Ошибка обновления настроек:', error)
   } finally {
