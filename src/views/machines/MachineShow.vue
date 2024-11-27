@@ -4,8 +4,9 @@
     <div class="container mt-[5.5rem] mx-auto my-0 w-4/5 sm:grid sm:grid-cols-2 justify-stretch">
       <!-- Условие, чтобы подождать загрузки данных -->
       <div v-if="machine" class="machine-info">
-        <div class="flex machine-header border-b mb-2 items-center">
+        <div class="flex machine-header border-b mb-2 items-center justify-between">
           <h1 class="text-2xl font-medium pb-2">Автомат #{{ machine.id }}</h1>
+          <form @submit.prevent="detach"><button>Отвязать автомат</button></form>
         </div>
 
         <SuccessComponent v-if="message" :message="message" @close="message = ''" />
@@ -132,6 +133,20 @@ const subscriptionIsNotToday = computed(() => {
   const today = new Date().toISOString().slice(0, 10)
   return machine.value.subscription_until !== today
 })
+
+const detach = async () => {
+  const id = route.params.id
+  const response = axios.patch(`/machine/${id}/detach`)
+
+  const error = (await response).data.error
+  const success = (await response).data.success
+
+  if (error) {
+    console.log(error)
+  } else if (success) {
+    console.log(success)
+  }
+}
 
 // Обновляем данные машины
 </script>
