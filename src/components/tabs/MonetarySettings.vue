@@ -86,23 +86,26 @@ const getSettings = async () => {
     const gottenCoins = response.data.bills?.coins || []
 
     // Обновляем массивы bills и coins, сохраняя оба значения (value и enabled)
-    bills.splice(
-      0,
-      bills.length,
-      ...gottenBills.map((bill) => ({
-        value: bill.value,
-        enabled: bill.enabled ?? false, // Если нет свойства enabled, устанавливаем его как false
-      })),
-    )
+    if (!response.data.error) {
+      bills.splice(
+        0,
+        bills.length,
+        ...gottenBills.map((bill) => ({
+          value: bill.value,
+          enabled: bill.enabled ?? false, // Если нет свойства enabled, устанавливаем его как false
+        })),
+      )
 
-    coins.splice(
-      0,
-      coins.length,
-      ...gottenCoins.map((coin) => ({
-        value: coin.value,
-        enabled: coin.enabled ?? true, // Если нет свойства enabled, устанавливаем его как true
-      })),
-    )
+      coins.splice(
+        0,
+        coins.length,
+        ...gottenCoins.map((coin) => ({
+          value: coin.value,
+          enabled: coin.enabled ?? true, // Если нет свойства enabled, устанавливаем его как true
+        })),
+      )
+      console.log(response.data.error)
+    }
   } catch (error) {
     console.error('Ошибка при получении настроек:', error)
     errorMessage.value = 'Ошибка при получении настроек'
