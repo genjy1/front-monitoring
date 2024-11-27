@@ -212,8 +212,10 @@ const saveSettings = async () => {
     clePassword: clePassword.value,
     drawerCapacity: drawerCapacity.value,
   })
+  const online_kassa_settings = { online_kassa_settings: [] }
+  const qr_payments_settings = { qr_payments_settings: [] }
 
-  const payload = { settings } // Оборачиваем данные в объект с ключом "settings"
+  const payload = { settings, online_kassa_settings, qr_payments_settings } // Оборачиваем данные в объект с ключом "settings"
 
   console.log(payload) // Для проверки отправляемых данных
 

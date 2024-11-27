@@ -15,9 +15,10 @@
 </template>
 
 <script setup>
+const emit = defineEmits()
+
 defineProps({
   modelValue: {
-    type: String,
     required: true,
   },
   id: {
@@ -41,8 +42,6 @@ defineProps({
     default: '',
   },
 })
-
-defineEmits(['update:modelValue'])
 
 // Метод для обработки ввода
 const onInput = (event) => {

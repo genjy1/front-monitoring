@@ -36,7 +36,12 @@
       </div>
       <Preloader v-else class="relative left-[50vmax] mt-96" />
       <div
-        class="hidden sm:block machine-img bg-[url('https://vend-shop.com/image/cache/catalog/SM%206367%20Original/sm-vendor-lond-vendshop-torgovyj-avtomat-left-350x650.png')] w-auto h-[824px] bg-contain bg-center bg-no-repeat"
+        class="hidden sm:block machine-img w-auto h-[824px] bg-contain bg-center bg-no-repeat"
+        :class="
+          machine
+            ? 'bg-[url(https://vend-shop.com/image/cache/catalog/SM%206367%20Original/sm-vendor-lond-vendshop-torgovyj-avtomat-left-350x650.png)]'
+            : ''
+        "
       ></div>
     </div>
   </div>

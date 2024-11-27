@@ -183,7 +183,7 @@ const handleTouchEnd = () => {
       <!-- Кнопка "Прокрутить влево" -->
       <button
         v-show="isScrollable"
-        class="absolute -top-1 z-10 bg-white border rounded-full p-2 shadow hover:bg-gray-100 focus:ring focus:ring-blue-300 transition disabled:opacity-50"
+        class="absolute -top-1 z-10 bg-white border rounded-full px-2 py-1 shadow hover:bg-gray-100 focus:ring focus:ring-blue-300 transition disabled:opacity-50"
         :disabled="scrollPosition >= 0"
         @click="scrollTabs('left')"
       >
@@ -227,7 +227,7 @@ const handleTouchEnd = () => {
       <!-- Кнопка "Прокрутить вправо" -->
       <button
         v-show="isScrollable"
-        class="absolute -top-1 -right-0 z-10 bg-white border rounded-full p-2 shadow hover:bg-gray-100 focus:ring focus:ring-blue-300 transition disabled:opacity-50"
+        class="absolute -top-1 right-0 z-10 bg-white border rounded-full px-2 py-1 shadow hover:bg-gray-100 focus:ring focus:ring-blue-300 transition disabled:opacity-50"
         @click="scrollTabs('right')"
       >
         &rarr;

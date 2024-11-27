@@ -27,7 +27,8 @@
         <span class="block">Состояние </span><span>{{ machine.condition }}</span>
       </li>
       <li class="border-b py-2 grid grid-cols-2">
-        <span class="block">Дата и время запуска </span><span>{{ machine.created_at }}</span>
+        <span class="block">Дата и время запуска </span
+        ><span>{{ humanizeDate(machine.created_at) }}</span>
       </li>
       <li class="border-b py-2 grid grid-cols-2">
         <span class="block">Текущий баланс </span><input v-model="data.balance" />
@@ -57,6 +58,12 @@ const props = defineProps({
 })
 
 const route = useRoute()
+
+const humanizeDate = (date) => {
+  return (
+    new Date(date).toLocaleDateString('ru-RU') + ' ' + new Date(date).toLocaleTimeString('ru-RU')
+  )
+}
 
 const updateMachine = async () => {
   try {
