@@ -27,6 +27,7 @@ const props = defineProps({
   modelValue: {
     type: Array,
     required: true,
+    default: () => [], // Устанавливаем дефолтное значение как пустой массив
   },
   value: {
     type: String,

@@ -137,10 +137,11 @@ const counter = ref(1)
 const links = ref()
 const rotated = ref(false)
 const isOpen = ref(false)
+const activeIndex = ref(null) // Инициализируем activeIndex
 
 const toggleColumn = (column, index) => {
   columnsStore.toggleColumn(column) // Переключаем состояние и сохраняем
-  activeIndex.value = index
+  activeIndex.value = index // Обновляем индекс активного столбца
 }
 
 const toggle = () => {
