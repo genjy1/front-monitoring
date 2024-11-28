@@ -1,23 +1,24 @@
 <template>
   <div>
-    <HeaderComponent />
+    <HeaderComponent class="z-0" />
     <div class="container mt-[5.5rem] mx-auto my-0 w-4/5 sm:grid sm:grid-cols-2 justify-stretch">
-      <!-- Условие, чтобы подождать загрузки данных -->
       <div v-if="machine" class="machine-info">
         <div class="flex machine-header border-b mb-2 items-center justify-between">
           <h1 class="text-2xl font-medium pb-2">Автомат #{{ machine.id }}</h1>
-          <form @submit.prevent="detach"><button>Отвязать автомат</button></form>
+          <button
+            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+            @click="openModal"
+          >
+            Отвязать автомат
+          </button>
         </div>
 
         <SuccessComponent v-if="message" :message="message" @close="message = ''" />
-
         <ErrorMessageComponent
           v-if="machine.status !== 'Online'"
           :text="errorText"
           @close="errorText = ''"
         />
-
-        <!-- Проверка на истечение подписки -->
         <p v-if="subscriptionIsNotToday" class="text-red-800">
           Внимание: подписка истекает {{ machine.subscription_until }}!
         </p>
@@ -45,18 +46,28 @@
         "
       ></div>
     </div>
+
+    <!-- Модальное окно для подтверждения отвязки автомата -->
+    <ModalConfirmDetach
+      v-if="isDetaching"
+      :machine-id="machine.id"
+      @close="closeModal"
+      @confirm="detach"
+      class="z-[9999]"
+    />
   </div>
 </template>
 
 <script setup>
-import HeaderComponent from '@/components/HeaderComponent.vue'
-import TabsComponent from '@/components/TabsComponent.vue'
 import axios from 'axios'
 import { ref, onMounted, computed, defineProps, defineAsyncComponent } from 'vue'
 import { useRoute } from 'vue-router'
 import ErrorMessageComponent from '@/components/messages/ErrorMessageComponent.vue'
 import Preloader from '@/components/Preloader.vue'
 import SuccessComponent from '@/components/messages/SuccessComponent.vue'
+import ModalConfirmDetach from '@/components/ModalConfirmDetach.vue' // Модальное окно
+import HeaderComponent from '@/components/HeaderComponent.vue'
+import TabsComponent from '@/components/TabsComponent.vue'
 
 const errorText = ref('Нет связи с автоматом. Удаленное управление недоступно')
 const tabs = [
@@ -96,6 +107,7 @@ const machine = ref(false)
 const machineHeader = ref('')
 const message = ref()
 const activeTab = ref('information')
+const isDetaching = ref(false) // Состояние открытия модального окна
 
 const changeActiveTab = (newTab) => {
   activeTab.value = newTab
@@ -134,19 +146,33 @@ const subscriptionIsNotToday = computed(() => {
   return machine.value.subscription_until !== today
 })
 
-const detach = async () => {
-  const id = route.params.id
-  const response = axios.patch(`/machine/${id}/detach`)
+// Логика отвязки автомата с передачей controller_id
+const detach = async (controllerId) => {
+  try {
+    const response = await axios.patch(`/machine/${machine.value.id}/detach`, {
+      controller_id: controllerId,
+    })
+    const { success, error } = response.data
 
-  const error = (await response).data.error
-  const success = (await response).data.success
-
-  if (error) {
-    console.log(error)
-  } else if (success) {
-    console.log(success)
+    if (success) {
+      message.value = 'Автомат успешно отвязан'
+    } else if (error) {
+      errorText.value = error
+    }
+  } catch (error) {
+    console.error('Ошибка при отвязке автомата:', error)
+  } finally {
+    closeModal()
   }
 }
 
-// Обновляем данные машины
+// Открытие модального окна
+const openModal = () => {
+  isDetaching.value = true
+}
+
+// Закрытие модального окна
+const closeModal = () => {
+  isDetaching.value = false
+}
 </script>

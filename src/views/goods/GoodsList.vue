@@ -1,63 +1,64 @@
 <template>
+  <!-- Полупрозрачный фон для модального окна -->
   <div
-    class="overlay w-full h-screen backdrop-blur-8 absolute bg-black bg-opacity-20"
     v-show="isOpen"
-    @click="closeModal"
+    class="overlay fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300"
+    @click.self="closeModal"
   >
-    <!-- Add new record dialog -->
-    <DialogWindow :isOpen="isOpen" :newGood="newGood" @close="closeModal" @submitGood="addGood" />
+    <!-- Модальное окно -->
+    <DialogWindow
+      :isOpen="isOpen"
+      :newGood="newGood"
+      @close="closeModal"
+      @submitGood="addGood"
+      class="relative z-10 bg-white rounded-lg shadow-lg w-[90%] sm:w-1/2 p-6"
+    />
   </div>
   <div>
-    <HeaderComponent />
+    <HeaderComponent class="z-0" />
 
-    <main class="main container mx-auto my-0 w-4/5 mt-24">
-      <!-- Success message component -->
+    <main class="container mx-auto my-0 w-full lg:w-4/5 mt-24 px-4">
+      <!-- Успешное сообщение -->
       <SuccessComponent v-if="message" />
 
-      <header class="header flex items-center justify-between">
-        <h1 class="text-3xl pb-2 sm:mt-3 font-semibold flex items-center justify-between">
-          Список товаров
-        </h1>
+      <!-- Заголовок и кнопка добавления -->
+      <header class="header flex flex-wrap items-center justify-between mb-6">
+        <h1 class="text-2xl sm:text-3xl font-semibold">Список товаров</h1>
         <button
           @click="openModal"
-          class="sm:button add-btn font-normal p-2 text-center outline-none hidden sm:block border-2 rounded hover:bg-[#777] hover:text-white transition hover:border-transparent"
+          class="add-btn flex items-center justify-center bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 transition"
         >
-          <!-- <span
-            class="hidden sm:block border-2 p-2 rounded hover:bg-[#777] hover:text-white transition hover:border-transparent"
+          <span class="hidden sm:inline">Добавить</span>
+          <svg
+            class="sm:hidden"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
           >
-
-          </span> -->
-          Добавить
-        </button>
-        <span class="icon sm:hidden" @click="openModal">
-          <svg width="32" height="32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="45" stroke="black" stroke-width="5" fill="none" />
-            <line x1="50" y1="30" x2="50" y2="70" stroke="black" stroke-width="6" />
-            <line x1="30" y1="50" x2="70" y2="50" stroke="black" stroke-width="6" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
-        </span>
+        </button>
       </header>
 
-      <hr class="py-2" />
+      <hr class="mb-6" />
 
-      <!-- Table for larger screens -->
-      <table
-        v-if="goods.length"
-        class="w-full border-collapse border border-gray-300 hidden sm:table"
-      >
-        <thead>
-          <tr class="border-b bg-[#eee]">
-            <th class="border-r font-normal py-2">Код</th>
-            <th class="border-r font-normal py-2">Наименование</th>
-            <th class="w-[100px] font-normal text-center">Удалить</th>
+      <!-- Таблица для больших экранов -->
+      <table v-if="goods.length" class="hidden sm:table w-full text-sm border border-gray-300">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="py-2 px-4 text-left border-b">Код</th>
+            <th class="py-2 px-4 text-left border-b">Наименование</th>
+            <th class="py-2 px-4 text-center border-b">Удалить</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="good in goods" :key="good.id" class="border-b hover:bg-[#eee] goods-row">
-            <td class="border-r py-2 px-2 text-center">{{ good.code }}</td>
-            <td class="border-r py-2 px-2 text-center">{{ good.name }}</td>
-            <td class="border-r py-2 px-2 flex justify-around">
-              <button @click="deleteGood(good.id)" class="p-0 m-0 w-8">
+          <tr v-for="good in goods" :key="good.id" class="hover:bg-gray-50 transition">
+            <td class="py-2 px-4 border-b">{{ good.code }}</td>
+            <td class="py-2 px-4 border-b">{{ good.name }}</td>
+            <td class="py-2 px-4 border-b text-center">
+              <button @click="deleteGood(good.id)" class="p-1 text-red-500 hover:text-red-700">
                 <DeleteIcon />
               </button>
             </td>
@@ -65,23 +66,28 @@
         </tbody>
       </table>
 
-      <!-- Card layout for mobile screens -->
-      <div v-if="goods.length" class="grid gap-4 sm:hidden">
+      <!-- Карточки для мобильных экранов -->
+      <div v-if="goods.length" class="grid grid-cols-1 gap-4 sm:hidden">
         <div
           v-for="good in goods"
           :key="good.id"
-          class="border rounded-lg shadow-md p-4 bg-white hover:bg-gray-100"
+          class="bg-white border rounded-lg shadow-md p-4 hover:shadow-lg transition"
         >
-          <div class="flex flex-col items-center justify-between mb-2">
-            <h3 class="font-semibold text-left w-full text-lg">{{ good.name }}</h3>
-            <span class="text-sm font-semibold text-gray-600">Код: {{ good.code }}</span>
+          <div class="flex flex-col">
+            <h3 class="text-lg font-medium mb-2">{{ good.name }}</h3>
+            <span class="text-sm text-gray-500">Код: {{ good.code }}</span>
           </div>
-          <div class="text-right">
-            <button @click="deleteGood(good.id)" class="p-1 text-red-600 hover:text-red-800">
+          <div class="mt-4 text-right">
+            <button @click="deleteGood(good.id)" class="text-red-500 hover:text-red-700">
               <DeleteIcon />
             </button>
           </div>
         </div>
+      </div>
+
+      <!-- Сообщение, если товаров нет -->
+      <div v-else class="text-center py-8 text-gray-500">
+        <p>Нет доступных товаров. Нажмите "Добавить", чтобы создать новый товар.</p>
       </div>
     </main>
     <Pagination :links="links" @page-change="onPageChange" />
@@ -149,3 +155,21 @@ const addGood = async () => {
 
 onMounted(fetchGoods)
 </script>
+<style scoped>
+/* Мобильные стили */
+.add-btn {
+  min-width: 120px;
+}
+
+@media (max-width: 640px) {
+  .add-btn {
+    width: 48px;
+    height: 48px;
+    padding: 0;
+  }
+
+  .add-btn svg {
+    margin: auto;
+  }
+}
+</style>
