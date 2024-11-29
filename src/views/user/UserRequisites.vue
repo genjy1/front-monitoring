@@ -101,9 +101,17 @@ const translate = {
 const hoveredIndex = ref(-1) // Индекс выбранного элемента
 const isLoading = ref(false) // Индикатор загрузки
 const error = ref('') // Сообщение об ошибке
+const debounceTimer = ref(null) // Переменная для хранения таймера debounce
 
-// Получение подсказок
+// Получение подсказок для банка
 const getBankByQuery = async () => {
+  if (!bankQuery.value.trim()) {
+    bankSuggestions.value = []
+    return
+  }
+
+  isLoading.value = true
+
   const url = 'http://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/bank'
   const token = 'abd915c8f10e1e5daae553fa92a6b6e7e71c841b'
 
@@ -119,29 +127,33 @@ const getBankByQuery = async () => {
   try {
     const response = await fetch(url, options)
     const data = await response.json()
-
-    bankSuggestions.value = data.suggestions
+    bankSuggestions.value = data.suggestions || []
   } catch (err) {
-    console.error(err)
+    console.error('Ошибка загрузки данных банка:', err)
+    error.value = 'Не удалось загрузить подсказки банка.'
+  } finally {
+    isLoading.value = false
   }
 }
 
-const getDataOfSelectedBank = () => {}
-
-// Обработка ввода
+// Обработка ввода с дебаунсом
 const handleInput = () => {
-  if (bankQuery.value.trim()) {
-    getBankByQuery()
-  } else {
-    bankSuggestions.value = []
+  // Очистка предыдущего таймера, если пользователь продолжает вводить
+  if (debounceTimer.value) {
+    clearTimeout(debounceTimer.value)
   }
+
+  // Установка нового таймера для дебаунса
+  debounceTimer.value = setTimeout(() => {
+    getBankByQuery()
+  }, 500)
 }
 
 // Выбор подсказки
 const selectSuggestion = (value, index) => {
   bankQuery.value = value
-
   selectedIndex.value = bankSuggestions.value[index].data
+
   bankDataFromSuggestions.БИК = selectedIndex.value.bic
   bankDataFromSuggestions.Название = selectedIndex.value.correspondent_account
   bankDataFromSuggestions.Корреспондетский_счёт = selectedIndex.value.name.payment
