@@ -20,6 +20,24 @@ const openBurgerMenu = () => {
   isOpen.value = !isOpen.value
 }
 
+const viewportWidth = ref(window.innerWidth)
+const viewportHeight = ref(window.innerHeight)
+
+// Функция для обновления размеров окна
+const updateViewport = () => {
+  viewportWidth.value = window.innerWidth
+  viewportHeight.value = window.innerHeight
+
+  console.log(viewportWidth.value);
+
+}
+
+// Установка обработчика события resize при монтировании компонента
+onMounted(() => {
+  window.addEventListener('resize', updateViewport)
+})
+
+
 // Реактивное состояние для дропдаунов
 const dropdowns = ref({
   machine: false,
@@ -62,9 +80,10 @@ watch(
     <div class="mx-auto my-0 w-4/5 py-4 items-center justify-between flex">
       <router-link
         to="/"
-        class="font-semibold text-lg bg-[#6B23A7] text-white p-2 rounded-2xl border-transparent hover:bg-transparent hover:text-[#6B23A7] hover:border-[#6B23A7] transition-all ease-linear border-2"
+        class="font-semibold text-lg  bg-[#6B23A7] text-white  rounded-2xl border-transparent hover:bg-transparent hover:text-[#6B23A7] hover:border-[#6B23A7] transition-all ease-linear border-2"
+        :class="viewportWidth <= 913 ? 'p-1' : 'p-2' "
       >
-        VendShop Online
+        {{ viewportWidth <= 913 ? 'VShop Online' : 'VendShop Online' }}
       </router-link>
       <nav class="list hidden sm:block">
         <ul class="nav-list gap-5 flex">

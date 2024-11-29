@@ -6,8 +6,8 @@
     <p class="pb-4">Здесь вы можете изменить реквизиты</p>
 
     <div class="requisites flex flex-col gap-4">
-      <form @submit.prevent="" class="relative bank-data mb-8">
-        <div class="h-[76px]">
+      <form @submit.prevent="" class="relative bank-data rounded">
+        <div class="h-[76px] rounded">
           <label for="bankQuery" class="block mb-2 text-gray-700"> Данные о банке </label>
           <input
             id="bankQuery"
@@ -49,8 +49,8 @@
               <label :for="translate[key]">{{ key.replace(/_/g, ' ') }}</label>
               <input
                 type="text"
-                :value="value"
                 disabled
+                :value="value"
                 :id="translate[key]"
                 :name="translate[key]"
                 class="border-2 border-purple-900 rounded px-3 py-2 w-full focus:outline-none focus:ring focus:ring-purple-300"
@@ -68,26 +68,29 @@
 
       <form
         @submit.prevent="handleOrgInput"
-        class="org-data transition-all ease-linear z-50 relative"
+        class="org-data transition-all ease-linear z-50 relative rounded"
         :class="bankQuery ? 'mt-80' : ''"
       >
-        <label for="orgQuery">Данные об организации</label>
-        <input
-          type="text"
-          placeholder="Введите название организации"
-          class="border-2 rounded border-purple-900 px-4 py-2 w-full outline-none"
-          name="orgQuery"
-          id="orgQuery"
-          v-model="orgQuery"
-          @input="handleOrgInput"
-        />
-        <CloseIcon
-          class="relative z-[9999] text-purple-900 -top-[2.18rem] left-[92%] sm:left-[92%] md:left-[93%] lg:left-[94%] xl:left-[95%] 2xl:left-[97%] cursor-pointer"
-          @click="clearOrgData"
-        />
+        <div class="label-group h-[76px] rounded">
+          <label for="orgQuery" class="block my-2 text-gray-700">Данные об организации</label>
+          <input
+            type="text"
+            placeholder="Введите название организации"
+            class="border-2 border-purple-900 rounded px-3 py-2 w-full focus:outline-none focus:ring focus:ring-purple-300"
+            name="orgQuery"
+            id="orgQuery"
+            v-model="orgQuery"
+            @input="handleOrgInput"
+          />
+          <CloseIcon
+            class="relative z-[9999] text-purple-900 -top-[2.18rem] left-[92%] sm:left-[92%] md:left-[93%] lg:left-[94%] xl:left-[95%] 2xl:left-[97%] cursor-pointer"
+            @click="clearOrgData"
+          />
+        </div>
+
         <ul
           v-if="orgSuggestions.length"
-          class="absolute bg-white border border-gray-300 rounded top-12 mt-1 w-full max-h-40 overflow-y-auto shadow-lg z-10"
+          class="absolute bg-white border border-gray-300 rounded top-[4.6rem] mt-1 w-full max-h-40 overflow-y-auto shadow-lg z-10"
         >
           <li
             v-for="(suggest, index) in orgSuggestions"
@@ -99,9 +102,8 @@
             {{ suggest.value }}
           </li>
         </ul>
-        <!-- <div>{{ selectedOrgDataRaw }}</div> -->
-        <div v-for="(value, key) in selectedOrgData" v-if="selectedOrgDataRaw">
-          <!-- <p>{{ key }} {{ value }}</p> -->
+
+        <div v-for="(value, key) in selectedOrgData" v-if="orgQuery">
           <label :for="translate[key]">{{ key.replace(/_/g, ' ') }}</label>
           <input
             type="text"
@@ -112,6 +114,23 @@
             class="border-2 border-purple-900 rounded px-3 py-2 w-full focus:outline-none focus:ring focus:ring-purple-300"
           />
         </div>
+        <div class="payment-account">
+          <label for="payment">Рассчётный счёт</label
+          ><input
+            type="text"
+            id="payment"
+            v-model="payment_account"
+            class="border-2 border-purple-900 rounded px-3 py-2 w-full focus:outline-none focus:ring focus:ring-purple-300"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="my-2 py-2 px-4 border-2 border-purple-900 rounded w-full sm:w-min text-nowrap"
+          @click="submitData"
+        >
+          Отправить реквизиты
+        </button>
       </form>
     </div>
   </div>
@@ -122,6 +141,7 @@ import { reactive, ref } from 'vue'
 import axios from 'axios'
 import CloseIcon from '@/components/icons/CloseIcon.vue'
 import HeaderComponent from '@/components/HeaderComponent.vue'
+import { useRoute } from 'vue-router'
 
 // Реактивные переменные
 const bankQuery = ref('')
@@ -130,6 +150,8 @@ const bankSuggestions = ref([])
 const orgSuggestions = ref([])
 const selectedOrgDataRaw = ref()
 const selectedIndex = ref(0)
+const payment_account = ref('')
+
 const selectedOrgData = reactive({
   ИНН: '',
   Название: '',
@@ -138,15 +160,18 @@ const selectedOrgData = reactive({
 const bankDataFromSuggestions = reactive({
   БИК: '',
   Название: '',
-  Корреспондетский_счёт: '',
+  Корреспондентский_счёт: '',
   Адрес: '',
 })
 const translate = {
   БИК: 'bic',
   Название: 'name',
-  Корреспондетский_счёт: 'correspondent_account',
+  Корреспондентский_счёт: 'correspondent_account',
   Адрес: 'address',
 }
+
+const route = useRoute()
+const id = route.params.id
 const hoveredIndex = ref(-1) // Индекс выбранного элемента
 const isLoading = ref(false) // Индикатор загрузки
 const error = ref('') // Сообщение об ошибке
@@ -214,8 +239,8 @@ const selectSuggestion = (value, index) => {
   selectedIndex.value = bankSuggestions.value[index].data
 
   bankDataFromSuggestions.БИК = selectedIndex.value.bic
-  bankDataFromSuggestions.Название = selectedIndex.value.correspondent_account
-  bankDataFromSuggestions.Корреспондетский_счёт = selectedIndex.value.name.payment
+  bankDataFromSuggestions.Название = selectedIndex.value.name.payment
+  bankDataFromSuggestions.Корреспондентский_счёт = selectedIndex.value.correspondent_account
   bankDataFromSuggestions.Адрес = selectedIndex.value.address.value
 
   bankSuggestions.value = [] // Очистка списка после выбора
@@ -239,6 +264,39 @@ const selectOrgSuggestion = (value, index) => {
   selectedOrgData.ИНН = orgSuggestions.value[index].data.inn
   selectedOrgData.Адрес = orgSuggestions.value[index].data.address.unrestricted_value
   orgSuggestions.value = [] // Очистка списка после выбора
+}
+
+const isSubmitting = ref(false)
+
+const submitData = async () => {
+  isSubmitting.value = true
+  const requestData = {
+    organization: {
+      name: selectedOrgData.Название,
+      inn: selectedOrgData.ИНН,
+      address: selectedOrgData.Адрес,
+      payment_account: payment_account.value,
+    },
+    bank: {
+      bic: bankDataFromSuggestions.БИК,
+      name: bankDataFromSuggestions.Название,
+      correspondent_account: bankDataFromSuggestions.Корреспондентский_счёт,
+      address: bankDataFromSuggestions.Адрес,
+    },
+  }
+
+  console.log(requestData)
+
+  try {
+    const response = await axios.post(`/user/${id}/requisites/create`, { requisites: requestData })
+    console.log('Данные успешно отправлены:', response.data)
+    console.warn('Реквизиты успешно отправлены!')
+  } catch (err) {
+    console.error('Ошибка отправки данных:', err)
+    console.warn('Не удалось отправить реквизиты. Попробуйте снова.')
+  } finally {
+    isSubmitting.value = false
+  }
 }
 
 // Очистка данных для организации
