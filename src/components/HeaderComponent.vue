@@ -25,10 +25,9 @@ const viewportHeight = ref(window.innerHeight)
 
 // Функция для обновления размеров окна
 const updateViewport = () => {
+
   viewportWidth.value = window.innerWidth
   viewportHeight.value = window.innerHeight
-
-  console.log(viewportWidth.value);
 
 }
 
@@ -76,12 +75,12 @@ watch(
 )
 </script>
 <template>
-  <header class="border-b bg-white border-gray-200 text-[#777] w-full top-0 fixed z-[999]">
-    <div class="mx-auto my-0 w-4/5 py-4 items-center justify-between flex">
+  <header class="border-b  border-gray-200 text-[#777] w-full top-0 fixed z-[999] backdrop-blur bg-white/20">
+    <div :class="isOpen ? 'bg-white' : 'mx-auto my-0 w-4/5 py-4 items-center justify-between flex ' ">
       <router-link
         to="/"
         class="font-semibold text-lg  bg-[#6B23A7] text-white  rounded-2xl border-transparent hover:bg-transparent hover:text-[#6B23A7] hover:border-[#6B23A7] transition-all ease-linear border-2"
-        :class="viewportWidth <= 913 ? 'p-1' : 'p-2' "
+        :class="[viewportWidth <= 913 ? 'p-1' : 'p-2'], [isOpen ? 'hidden' : '']"
       >
         {{ viewportWidth <= 913 ? 'VShop Online' : 'VendShop Online' }}
       </router-link>
@@ -252,25 +251,24 @@ watch(
         </div>
       </div>
 
-      <div class="burger grid-row-3 grid sm:hidden gap-1 rounded-xl" @click="openBurgerMenu">
+      <div class="burger grid-row-3 grid sm:hidden gap-1 rounded-xl" :class="isOpen ? 'hidden' : ''" @click="openBurgerMenu">
         <span class="w-8 block bg-purple-800 h-1"></span>
         <span class="w-8 block bg-purple-800 h-1"></span>
         <span class="w-8 block bg-purple-800 h-1"></span>
       </div>
-      <transition name="fade">
+
         <div
           v-show="isOpen"
           :class="[
             'sm:hidden',
-            'h-[50rem]',
+            'h-screen',
             'bg-white',
             'burger-menu',
-            '-top-[4.55rem]',
-            'absolute',
-            'w-full',
+            'w-screen',
+            'mt-6'
           ]"
         >
-          <nav class="list sm:hidden relative top-[5.8rem] bg-white h-full right-10">
+          <nav class="list sm:hidden h-screen bg-white ">
             <div
               class="logo-wrapper mx-auto my-0 w-4/5 flex items-center pb-4 border-b border-b-[#6323A7]"
             >
@@ -285,7 +283,7 @@ watch(
             </div>
             <ul class="nav-list gap-5 mx-auto mt-4 w-4/5 grid">
               <li class="relative">
-                <button @click="toggleDropdown('machine')" class="dropdown-nav flex items-center">
+                <button @click="toggleDropdown('machine')" class="dropdown-nav flex items-center w-full justify-between">
                   Автоматы
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -314,7 +312,7 @@ watch(
                 </ul>
               </li>
               <li class="relative">
-                <button @click="toggleDropdown('goods')" class="dropdown-nav flex items-center">
+                <button @click="toggleDropdown('goods')" class="dropdown-nav flex items-center w-full justify-between">
                   Товары
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -346,7 +344,7 @@ watch(
                 <router-link to="/sales" class="hover:after:w-full">Журнал продаж</router-link>
               </li>
               <li class="relative">
-                <button @click="toggleDropdown('stats')" class="dropdown-nav flex items-center">
+                <button @click="toggleDropdown('stats')" class="dropdown-nav flex items-center w-full justify-between">
                   Статистика
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -385,7 +383,7 @@ watch(
                 </ul>
               </li>
               <button v-if="user" class="drop-button flex flex-col gap-2">
-                <span @click="toggleDropdown('actions'), toggleClass()" class="cursor-pointer flex">{{
+                <span @click="toggleDropdown('actions'), toggleClass()" class="cursor-pointer flex w-full justify-between">{{
                   userStore.user.user_name
                 }}
                                 <AccountStroke
@@ -435,7 +433,6 @@ watch(
             </ul>
           </nav>
         </div>
-      </transition>
     </div>
   </header>
 </template>

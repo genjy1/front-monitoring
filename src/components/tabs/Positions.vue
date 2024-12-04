@@ -123,7 +123,6 @@ const positions = ref([
 const editPosition = (index) => {
   const item = positions.value[index]
   isOpen.value = !isOpen.value
-  console.log(item)
 }
 
 // Сохранение настроек

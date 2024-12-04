@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[4 px]"
+    class="fixed inset-0 flex items-center justify-center backdrop-blur-[4px]"
     @click.self="close"
   >
     <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">

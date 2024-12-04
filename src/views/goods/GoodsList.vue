@@ -54,7 +54,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="good in goods" :key="good.id" class="hover:bg-gray-50 transition">
+          <tr
+            v-for="good in goods"
+            :key="good.id"
+            class="hover:bg-gray-50 transition hover:cursor-pointer"
+            @click="router.push(`/good/${good.id}`)"
+          >
             <td class="py-2 px-4 border-b">{{ good.code }}</td>
             <td class="py-2 px-4 border-b">{{ good.name }}</td>
             <td class="py-2 px-4 border-b text-center">
@@ -102,6 +107,7 @@ import SuccessComponent from '@/components/messages/SuccessComponent.vue'
 import DeleteIcon from '@/components/icons/DeleteIcon.vue'
 import DialogWindow from '@/components/DialogWindow.vue'
 import Pagination from '@/components/Pagination.vue'
+import router from '@/router'
 
 const goods = ref([])
 const newGood = ref({ code: '', name: '' })
@@ -157,9 +163,6 @@ onMounted(fetchGoods)
 </script>
 <style scoped>
 /* Мобильные стили */
-.add-btn {
-  min-width: 120px;
-}
 
 @media (max-width: 640px) {
   .add-btn {

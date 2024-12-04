@@ -18,6 +18,7 @@ import Collections from '@/views/stats/Collections.vue'
 import ForgotPassword from '@/views/user/ForgotPassword.vue'
 import ResetPassword from '@/views/user/ResetPassword.vue'
 import AttachMachine from '@/views/machines/AttachMachine.vue'
+import GoodShow from '@/views/goods/GoodShow.vue'
 
 const routes = [
   { path: '/login', component: LoginView },
@@ -33,12 +34,12 @@ const routes = [
   { path: '/register', name: 'register', component: Register },
   { path: '/goods-state', component: GoodsState, meta: { requiresAuth: true } },
   { path: '/goods-list', component: GoodsList, meta: { requiresAuth: true } },
+  { path: '/good/:id/', component: GoodShow, meta: { requiresAuth: true }, props: true },
   { path: '/machine-state', component: MachineState, meta: { requiresAuth: true } },
   { path: '/stats/by-days', component: Totals, meta: { requiresAuth: true } },
   { path: '/sales', component: Sales, meta: { requiresAuth: true } },
   { path: '/stats', component: Stats, meta: { requiresAuth: true } },
   { path: '/stats/collections', component: Collections, meta: { requiresAuth: true } },
-  // { path: '/account-edit', component: AccountEdit, meta: { requiresAuth: true } },
   { path: '/feedback', component: Feedback, meta: { requiresAuth: true } },
   { path: '/user/:id/edit', name: 'user.edit', component: UserEdit, meta: { requiresAuth: true } },
   {

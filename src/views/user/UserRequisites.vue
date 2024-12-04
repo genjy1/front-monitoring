@@ -83,7 +83,7 @@
             @input="handleOrgInput"
           />
           <CloseIcon
-            class="relative z-[9999] text-purple-900 -top-[2.18rem] left-[92%] sm:left-[92%] md:left-[93%] lg:left-[94%] xl:left-[95%] 2xl:left-[97%] cursor-pointer"
+            class="relative z-[999] text-purple-900 -top-[2.18rem] left-[92%] sm:left-[92%] md:left-[93%] lg:left-[94%] xl:left-[95%] 2xl:left-[97%] cursor-pointer"
             @click="clearOrgData"
           />
         </div>
@@ -129,7 +129,7 @@
           class="my-2 py-2 px-4 border-2 border-purple-900 rounded w-full sm:w-min text-nowrap"
           @click="submitData"
         >
-          Отправить реквизиты
+          {{ isSubmitting ? 'Отправка...' : 'Отправить реквизиты' }}
         </button>
       </form>
     </div>
