@@ -132,7 +132,7 @@
             class="form-control px-3 py-2 border rounded-md focus:ring focus:ring-blue-500 w-11/12"
             name="okkm[rezhim_nalog]"
             id="rezhim_nalog"
-            v-model="form.ffd_version"
+            v-model="form.rezhim_nalog"
           >
             <option value="0">Общая система налогообложения</option>
             <option value="1">Упрощенная доход</option>
@@ -141,8 +141,8 @@
             <option value="4">Единый сельскохозяйственный налог</option>
             <option value="5" selected="selected">Патентная система налогообложения</option>
           </select>
-          <span v-if="errors.kassa_vend_place" class="text-red-500 text-xs">{{
-            errors.kassa_vend_place
+          <span v-if="errors.rezhim_nalog" class="text-red-500 text-xs">{{
+            errors.rezhim_nalog
           }}</span>
         </div>
 
@@ -152,7 +152,7 @@
             class="form-control px-3 py-2 border rounded-md focus:ring focus:ring-blue-500"
             name="okkm[product_nds]"
             id="product_nds"
-            v-model="form.ffd_version"
+            v-model="form.nds"
           >
             <option value="0">Ставка НДС 5%</option>
             <option value="1">Ставка НДС 7%</option>
@@ -163,9 +163,7 @@
             <option value="6">Ставка НДС 0</option>
             <option value="7" selected="selected">Без НДС</option>
           </select>
-          <span v-if="errors.kassa_vend_place" class="text-red-500 text-xs">{{
-            errors.kassa_vend_place
-          }}</span>
+          <span v-if="errors.kassa_vend_place" class="text-red-500 text-xs">{{ errors.nds }}</span>
         </div>
 
         <div class="grid gap-2 w-3/5">
@@ -176,7 +174,7 @@
             class="form-control px-3 py-2 border rounded-md focus:ring focus:ring-blue-500"
             name="okkm[okkm[priznak_sposoba_rascheta]"
             id="okkm[priznak_sposoba_rascheta]"
-            v-model="form.ffd_version"
+            v-model="form.priznak_sposoba_rascheta"
           >
             <option value="1" selected="selected">
               Полная предварительная оплата до момента передачи предмета расчета
@@ -213,7 +211,7 @@
             class="form-control px-3 py-2 border rounded-md focus:ring focus:ring-blue-500"
             name="okkm[priznak_predmeta_rascheta]"
             id="priznak_predmeta_rascheta"
-            v-model="form.ffd_version"
+            v-model="form.priznak_predmeta_rascheta"
           >
             <option value="1" selected="selected">
               Реализуемый товар, за исключением подакцизного товара (1)
@@ -301,6 +299,11 @@ const form = ref({
   ffd_version: '',
   serial_number: '',
   kassa_vend_address: '',
+  nds: '',
+  rezhim_nalog: '',
+  priznak_predmeta_rascheta: '',
+  priznak_sposoba_rascheta: '',
+  email: '',
 })
 
 // Объект для хранения ошибок
