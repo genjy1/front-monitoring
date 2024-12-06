@@ -5,26 +5,26 @@
       <ErrorMessageComponent :text="serverError" v-if="serverError" />
       <Preloader v-if="isLoading" />
     </div>
-    <div class="card-wrapper grid md:grid-cols-2 gap-[20px]" v-bind="$attrs">
+    <div class="card-wrapper hidden lg:grid md:grid-cols-2 gap-[20px]" v-bind="$attrs">
       <div class="image-wrapper bg-[#F1F1F1] rounded">
         <img
           :src="good.image === null ? placeholder : `http://127.0.0.1:8000/${good.image}`"
           :alt="`${good.name} image`"
-          class="rounded-lg size-96 mx-auto my-0 lg:relative lg:my-16"
+          class="rounded-lg lg:size-96 mx-auto my-0 lg:relative lg:my-16"
           crossorigin="anonymous"
         />
       </div>
       <div
-        class="info-wrapper flex flex-col justify-between bg-[#F1F1F1] rounded-3xl px-4 py-4 border-2 border-[#3D4070] h-[600px]"
+        class="info-wrapper hidden lg:grid grid-rows-3 justify-between bg-[#F1F1F1] rounded-3xl px-4 py-4 border-2 border-[#3D4070] h-[1000px]"
       >
-        <header class="header rounded-lg px-4 py-2 border-2 border-[#3D4070]">
+        <header class="header rounded-lg px-4 py-2 border-2 border-[#3D4070] self-start">
           <h1
             class="info-header uppercase text-3xl tracking-wide text-center font-medium md:capitalize"
           >
             {{ good.name }}
           </h1>
         </header>
-        <div class="info-container">
+        <div class="info-container lg:self-end">
           <div class="characteristics-wrapper grid md:grid-cols-3 gap-4">
             <div class="char-wrapper flex flex-col gap-2">
               <span class="px-4">Код товара</span>
@@ -87,6 +87,11 @@
             <div class="lg:hidden block w-6 relative right-1.5"><EditIcon /></div>
           </button>
         </div>
+      </div>
+    </div>
+    <div class="mobile card-wrapper grid grid-rows-2">
+      <div class="image-wrapper border-2 border-[#3D4070] rounded p-8">
+        <img src="@/assets/placeholder.png" alt="" />
       </div>
     </div>
     <div

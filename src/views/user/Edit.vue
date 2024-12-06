@@ -14,7 +14,7 @@
 
     <!-- Обновление ФИО -->
     <div class="actions-wrapper pt-4 grid grid-rows-1 gap-6">
-      <form @submit.prevent="updateFio" class="grid sm:grid-cols-4 gap-2">
+      <form @submit.prevent="updateFio" class="grid sm:grid-cols-4 gap-2 items-center">
         <label for="fio" class="font-bold">ФИО (организация)</label>
         <EditInput :model-value="user.fio" :id="'fio'" input-type="text" />
         <SubmitButton inner-text="Изменить" class="sm:max-w-[144px]" />
@@ -22,7 +22,7 @@
 
       <!-- Обновление имени пользователя -->
       <form @submit.prevent="updateUserName">
-        <div class="form-group grid grid-rows-2">
+        <div class="form-group grid grid-rows-2 items-center">
           <div
             class="input-group sm:items-center justify-between sm:grid flex flex-col sm:grid-cols-4 gap-2"
           >
@@ -37,27 +37,57 @@
       </form>
 
       <!-- Обновление email -->
-      <form @submit.prevent="updateEmail" class="grid sm:grid-cols-4 gap-2">
+      <form @submit.prevent="updateEmail" class="grid sm:grid-cols-4 gap-2 items-center">
         <label for="user_email" class="font-bold">Email</label>
         <EditInput :model-value="user.email" :id="'user_email'" input-type="email" />
         <SubmitButton inner-text="Изменить" class="sm:max-w-[144px]" />
       </form>
 
       <!-- Обновление временной зоны -->
-      <form @submit.prevent="updateTimezone" class="grid sm:grid-cols-4 gap-2">
-        <label for="user_tz" class="font-bold outline-none">Временная зона</label>
-        <select
-          v-model="user.user_tz"
-          id="user_tz"
-          class="border-2 border-[#6323A7] rounded px-4 py-2"
-        >
-          <option v-for="tz in timezones" :key="tz" :value="tz">{{ tz }}</option>
-        </select>
+      <form @submit.prevent="updateTimezone" class="grid sm:grid-cols-4 gap-2 items-center">
+        <label for="user_tz" class="font-bold">Временная зона</label>
+        <div class="relative w-full max-w-md">
+          <div
+            @click="isOpen = !isOpen"
+            class="border-2 border-[#6323A7] rounded px-4 py-2 cursor-pointer flex items-center justify-between"
+          >
+            <span class="text-gray-700">
+              {{ user.user_tz || 'Выберите временную зону' }}
+            </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-gray-500 transform transition-transform"
+              :class="{ 'rotate-180': isOpen }"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M5.293 7.707a1 1 0 011.414 0L10 11.586l3.293-3.879a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          </div>
+
+          <ul
+            v-show="isOpen"
+            class="absolute bg-white border-2 border-[#6323A7] rounded mt-1 w-full max-h-48 overflow-y-auto shadow-lg z-10"
+          >
+            <li
+              v-for="tz in timezones"
+              :key="tz"
+              @click="selectTimezone(tz)"
+              class="px-4 py-2 hover:bg-purple-100 cursor-pointer w-full"
+            >
+              {{ tz }}
+            </li>
+          </ul>
+        </div>
         <SubmitButton inner-text="Изменить" class="sm:max-w-[144px]" />
       </form>
 
       <!-- Обновление пароля -->
-      <form @submit.prevent="updatePassword" class="grid sm:grid-cols-4 gap-2">
+      <form @submit.prevent="updatePassword" class="grid sm:grid-cols-4 gap-2 items-center">
         <label for="password" class="font-bold">Изменение пароля</label>
         <EditInput :model-value="user.password" :id="'password'" input-type="password" />
         <SubmitButton inner-text="Изменить" class="sm:max-w-[144px]" />
@@ -94,15 +124,13 @@ const successMessage = ref('')
 const timezones = Intl.supportedValuesOf('timeZone')
 // Create a computed property to keep `user` reactive and tied to `userStore.user`
 const user = computed(() => userStore.user || {})
-
-// Fetch the user data when the component mounts
-onMounted(async () => {
-  await userStore.fetchUser()
-})
-
-// Create a router instance (if navigation is required)
+const isOpen = ref(false)
 const router = useRouter()
 
+const selectTimezone = (tz) => {
+  user.value.user_tz = tz
+  isOpen.value = false
+}
 // Method to send an update request
 const sendUpdateRequest = async (url, data) => {
   try {
@@ -137,6 +165,11 @@ const updatePassword = async () => {
 const updateRole = async () => {
   await sendUpdateRequest(`/user/${user.value.id}/update/role`, { role: user.value.role })
 }
+
+// Fetch the user data when the component mounts
+onMounted(async () => {
+  await userStore.fetchUser()
+})
 </script>
 
 <style scoped>

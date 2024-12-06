@@ -10,46 +10,57 @@
       </h1>
       <hr />
       <h2 class="py-2">Пожалуйста выберите автомат из списка:</h2>
-      <table class="table-auto border-collapse border-[#ddd] border w-full hidden sm:table">
-        <thead>
-          <tr class="border bg-[#eee] h-14 text-nowrap">
-            <th class="border-r p-2 font-normal text-[#333] text-center w-24">#</th>
-            <th class="border-r p-2 font-normal text-[#333] text-center w-36">Статус</th>
-            <th class="border-r p-2 font-normal text-[#333] text-center">Номер автомата</th>
-            <th class="border-r p-2 font-normal text-[#333] text-center">IMEI / ID контроллера</th>
-            <th class="border-r p-2 font-normal text-[#333] text-center">Имя автомата</th>
-            <th class="border-r p-2 font-normal text-[#333] text-center">Адрес</th>
-          </tr>
-        </thead>
-        <!-- Проверяем, если данные загружаются - показываем прелоадер, иначе таблицу -->
-        <tbody v-if="isLoading">
-          <tr>
-            <td colspan="6" class="text-center px-[50%] w-4/5 py-10">
-              <Preloader />
-            </td>
-          </tr>
-        </tbody>
-        <tbody v-else>
-          <tr
+      <div class="w-full hidden sm:block">
+        <!-- Заголовок таблицы -->
+        <div
+          class="grid grid-cols-6 bg-[#eee] text-[#333] font-normal text-center"
+          :class="machines.data ? 'rounded-t-2xl' : 'rounded-2xl'"
+        >
+          <div class="border-r py-4 px-2">#</div>
+          <div class="border-r py-4 px-2">Статус</div>
+          <div class="border-r py-4 px-2">Номер автомата</div>
+          <div class="border-r py-4 px-2">IMEI / ID контроллера</div>
+          <div class="border-r py-4 px-2">Имя автомата</div>
+          <div class="py-4 px-2">Адрес</div>
+        </div>
+
+        <!-- Проверяем, если данные загружаются - показываем прелоадер, иначе сетку -->
+        <div v-if="isLoading" class="text-center py-10">
+          <Preloader />
+        </div>
+
+        <div v-else>
+          <!-- Строки данных -->
+          <div
             v-for="machine in machines.data"
             :key="machine.id"
-            class="text-center row cursor-pointer hover:bg-gray-100 border-b"
+            class="grid grid-cols-6 border-b items-center text-center cursor-pointer hover:bg-gray-100 border-x"
             @click="navigateToMachine(machine.id)"
           >
-            <td class="border-r py-2">{{ machine.id }}</td>
-            <td
-              class="border-r py-2"
+            <div class="border-r h-full py-2">
+              <span class="relative top-2">{{ machine.id }}</span>
+            </div>
+            <div
+              class="border-r h-full py-2"
               :class="machine.status === 'Online' ? 'text-green-800' : 'text-red-800'"
             >
-              {{ machine.status }}
-            </td>
-            <td class="border-r py-2">{{ machine.number }}</td>
-            <td class="border-r py-2">{{ machine.imei }}</td>
-            <td class="border-r py-2">{{ machine.name }}</td>
-            <td class="border-r py-2">{{ machine.address }}</td>
-          </tr>
-        </tbody>
-      </table>
+              <span class="relative top-2">{{ machine.status }}</span>
+            </div>
+            <div class="border-r h-full py-2">
+              <span class="relative top-2">{{ machine.number }}</span>
+            </div>
+            <div class="border-r h-full py-2">
+              <span class="relative top-2">{{ machine.imei }}</span>
+            </div>
+            <div class="border-r h-full py-2">
+              <span class="relative top-2">{{ machine.name }}</span>
+            </div>
+            <div class="py-2 h-full">
+              <span>{{ machine.address }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="flex flex-wrap gap-4">
         <div v-if="isLoading" class="w-full flex justify-center py-10 sm:hidden">
@@ -137,20 +148,6 @@ watchEffect(async () => {
     console.warn('User data is not yet available')
   }
 })
-
-// watchEffect(async () => {
-//   try {
-//     const response = await axios.get(
-//       `http://127.0.0.1:8000/api/user/${userStore.user.id}/machines?page=${counter.value}`,
-//     )
-//     machines.value = response.data
-//     links.value = response.data.links
-//   } catch (error) {
-//     console.error('Ошибка при загрузке данных:', error)
-//   } finally {
-//     isLoading.value = false // Скрываем прелоадер после загрузки
-//   }
-// })
 
 onMounted(async () => {
   try {

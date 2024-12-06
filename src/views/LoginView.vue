@@ -173,7 +173,7 @@ const togglePasswordVisibility = () => {
     </div>
   </div>
 </template>
-<style>
+<style scoped>
 html {
   overflow: hidden;
 }

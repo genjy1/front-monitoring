@@ -5,7 +5,7 @@
     <hr class="pb-4" />
     <p class="pb-4">Здесь вы можете изменить реквизиты</p>
 
-    <div class="requisites flex flex-col gap-4">
+    <div class="requisites">
       <form @submit.prevent="" class="relative bank-data rounded">
         <div class="h-[76px] rounded">
           <label for="bankQuery" class="block mb-2 text-gray-700"> Данные о банке </label>
@@ -69,10 +69,12 @@
       <form
         @submit.prevent="handleOrgInput"
         class="org-data transition-all ease-linear z-50 relative rounded"
-        :class="bankQuery ? 'mt-80' : ''"
+        :class="bankQuery ? 'mt-[22rem]' : ''"
       >
         <div class="label-group h-[76px] rounded">
-          <label for="orgQuery" class="block my-2 text-gray-700">Данные об организации</label>
+          <label for="orgQuery" class="block my-2 text-gray-700" :class="bankQuery ? 'mt-8' : ''"
+            >Данные об организации</label
+          >
           <input
             type="text"
             placeholder="Введите название организации"
@@ -104,7 +106,7 @@
         </ul>
 
         <div v-for="(value, key) in selectedOrgData" v-if="orgQuery">
-          <label :for="translate[key]">{{ key.replace(/_/g, ' ') }}</label>
+          <label :for="translate[key]" class="mb-2 block">{{ key.replace(/_/g, ' ') }}</label>
           <input
             type="text"
             :value="value"
@@ -114,8 +116,8 @@
             class="border-2 border-purple-900 rounded px-3 py-2 w-full focus:outline-none focus:ring focus:ring-purple-300"
           />
         </div>
-        <div class="payment-account">
-          <label for="payment">Рассчётный счёт</label
+        <div class="payment-account mt-4">
+          <label for="payment" class="mb-2 block">Рассчётный счёт</label
           ><input
             type="text"
             id="payment"

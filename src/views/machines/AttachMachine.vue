@@ -2,7 +2,7 @@
   <HeaderComponent />
   <div class="container mx-auto mt-24 w-full lg:w-4/5 px-4">
     <!-- Заголовок -->
-    <h1 class="text-3xl font-semibold mb-6">Привязка автомата</h1>
+    <h1 class="text-3xl font-semibold sm:mb-6 mb-4">Привязка автомата</h1>
 
     <!-- Успех или ошибка -->
     <SuccessComponent v-if="message" :message="message" @close="message = ''" />
@@ -10,21 +10,21 @@
 
     <!-- Инструкции -->
     <div class="bg-gray-50 border rounded-lg p-6 mb-6 shadow-sm">
-      <p class="text-gray-700 leading-relaxed mb-4">
+      <p class="text-gray-700 mb-2 sm:mb-4">
         Для выполнения привязки предварительно разрешите автомату подключение к сети и работу
         мониторинга. Привязка осуществляется по ID контроллера автомата и ID текущей сессии.
       </p>
-      <p class="text-gray-700 mb-4">
+      <p class="text-gray-700 mb-2 sm:mb-4">
         ID контроллера автомата выводится в меню:
         <span
-          class="text-red-600 border px-2 rounded-md border-red-600 hover:bg-red-600 hover:text-white cursor-help"
+          class="text-red-600 border px-2 rounded-md border-red-600 hover:bg-red-600 hover:text-white cursor-help text-sm"
           >Настройки > Автомат > Инфо > ID контроллера</span
         >.
       </p>
-      <p class="text-gray-700 mb-4">
+      <p class="text-gray-700 mb-2 sm:mb-4">
         ID текущей сессии выводится в меню:
         <span
-          class="text-red-600 border px-2 rounded-md border-red-600 hover:bg-red-600 hover:text-white cursor-help"
+          class="text-red-600 border px-2 rounded-md border-red-600 hover:bg-red-600 hover:text-white cursor-help text-sm"
           >Настройки > Мониторинг > Показать UID</span
         >.
       </p>

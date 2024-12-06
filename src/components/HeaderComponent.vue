@@ -244,18 +244,18 @@ watch(
                 <RouterLink to="/feedback">Обратная связь</RouterLink>
               </li>
               <li class="w-full text-nowrap p-1">
-                <button v-if="userStore.user" @click="logout">Выйти</button>
+                <button class="w-full text-start" v-if="userStore.user" @click="logout">Выйти</button>
               </li>
             </ul>
           </transition>
         </div>
       </div>
 
-      <div class="burger grid-row-3 grid sm:hidden gap-1 rounded-xl" :class="isOpen ? 'hidden' : ''" @click="openBurgerMenu">
+      <button class="burger grid-row-3 grid sm:hidden gap-1 rounded-xl" :class="isOpen ? 'hidden' : ''" @click="openBurgerMenu">
         <span class="w-8 block bg-purple-800 h-1"></span>
         <span class="w-8 block bg-purple-800 h-1"></span>
         <span class="w-8 block bg-purple-800 h-1"></span>
-      </div>
+      </button>
 
         <div
           v-show="isOpen"
@@ -424,7 +424,7 @@ watch(
                       class="py-2">Обратная связь</RouterLink>
                     </li>
                     <li class="w-full text-nowrap">
-                      <button v-if="userStore.user" @click="logout" class="py-2">Выйти</button>
+                      <button v-if="userStore.user" @click="logout" class="py-2 w-full">Выйти</button>
                     </li>
                   </ul>
                 </div>
