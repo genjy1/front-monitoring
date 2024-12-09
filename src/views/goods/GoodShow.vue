@@ -5,7 +5,7 @@
       <ErrorMessageComponent :text="serverError" v-if="serverError" />
       <Preloader v-if="isLoading" />
     </div>
-    <div class="card-wrapper hidden lg:grid md:grid-cols-2 gap-[20px]" v-bind="$attrs">
+    <div class="card-wrapper lg:grid md:grid-cols-2 gap-[20px]" v-bind="$attrs">
       <div class="image-wrapper bg-[#F1F1F1] rounded">
         <img
           :src="good.image === null ? placeholder : `http://127.0.0.1:8000/${good.image}`"
@@ -15,9 +15,9 @@
         />
       </div>
       <div
-        class="info-wrapper hidden lg:grid grid-rows-3 justify-between bg-[#F1F1F1] rounded-3xl px-4 py-4 border-2 border-[#3D4070] h-[1000px]"
+        class="info-wrapper justify-between flex flex-col bg-[#F1F1F1] sm:rounded-3xl sm:px-4 sm:py-4 sm:border-2 border rounded border-[#3D4070] py-2 px-2 sm:mt-0 mt-8"
       >
-        <header class="header rounded-lg px-4 py-2 border-2 border-[#3D4070] self-start">
+        <header class="header sm:rounded-lg sm:px-4 sm:border-2 border-[#3D4070] self-start w-full">
           <h1
             class="info-header uppercase text-3xl tracking-wide text-center font-medium md:capitalize"
           >
@@ -29,7 +29,7 @@
             <div class="char-wrapper flex flex-col gap-2">
               <span class="px-4">Код товара</span>
               <div
-                class="border-2 rounded-full px-4 py-2 border-[#3D4070] flex items-center justify-between hover:bg-[#3D4070] hover:text-white transition-all ease-linear"
+                class="border sm:border-2 rounded-full px-4 py-2 border-[#3D4070] flex items-center justify-between hover:bg-[#3D4070] hover:text-white transition-all ease-linear"
                 :title="good.code"
               >
                 {{ shortenedMessage(good.code) + '...' }}
@@ -41,7 +41,7 @@
             <div class="char-wrapper flex flex-col gap-2">
               <span class="px-4">Остаток</span>
               <div
-                class="border-2 rounded-full px-4 py-2 border-[#3D4070] flex items-center justify-between hover:bg-[#3D4070] hover:text-white transition-all ease-linear"
+                class="border sm:border-2 rounded-full px-4 py-2 border-[#3D4070] flex items-center justify-between hover:bg-[#3D4070] hover:text-white transition-all ease-linear"
               >
                 {{ good.remains }}
                 <button type="button" @click="copyText(good.remains)" class="hover:text-white">
@@ -52,7 +52,7 @@
             <div class="char-wrapper flex flex-col gap-2">
               <span class="px-3 text-nowrap">Срок годности</span>
               <div
-                class="border-2 rounded-full px-4 py-2 border-[#3D4070] flex items-center justify-between hover:bg-[#3D4070] hover:text-white transition-all ease-linear"
+                class="border sm:border-2 rounded-full px-4 py-2 border-[#3D4070] flex items-center justify-between hover:bg-[#3D4070] hover:text-white transition-all ease-linear"
               >
                 {{ good.valid || 'Истёк' }}
                 <button
@@ -65,7 +65,7 @@
               </div>
             </div>
             <div
-              class="char-wrapper flex flex-col gap-2 lg:col-span-3 px-6 py-3 border-2 rounded-lg border-[#3D4070]"
+              class="char-wrapper flex flex-col gap-2 px-1 lg:col-span-3 sm:px-6 sm:py-3 sm:border-2 sm:rounded-lg sm:border-[#3D4070]"
             >
               <p class="description">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam, ipsa dolorum!
@@ -80,18 +80,13 @@
         </div>
         <div class="edit-btn__wrapper flex">
           <button
-            class="edit-btn absolute lg:static top-[7.5rem] right-12 bg-white/50 backdrop-blur lg:bg-transparent border-2 w-12 border-[#3D4070] px-4 py-2 lg:w-full rounded-lg h-12 hover:bg-[#3D4070] hover:text-white transition-all sm:self-end self-start"
+            class="edit-btn absolute lg:static top-[7.5rem] right-10 bg-white/50 backdrop-blur lg:bg-transparent border-2 w-12 border-[#3D4070] px-4 py-2 lg:w-full rounded-lg h-12 hover:bg-[#3D4070] hover:text-white transition-all sm:self-end self-start"
             @click="openModal()"
           >
             <div class="hidden lg:block">Редактировать</div>
             <div class="lg:hidden block w-6 relative right-1.5"><EditIcon /></div>
           </button>
         </div>
-      </div>
-    </div>
-    <div class="mobile card-wrapper grid grid-rows-2">
-      <div class="image-wrapper border-2 border-[#3D4070] rounded p-8">
-        <img src="@/assets/placeholder.png" alt="" />
       </div>
     </div>
     <div

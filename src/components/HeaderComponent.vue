@@ -5,6 +5,9 @@ import { useRouter } from 'vue-router'
 import AccountStroke from './icons/AccountStroke.vue'
 import Preloader from './Preloader.vue'
 import ProfileIcon from './icons/ProfileIcon.vue'
+import ExitIcon from './icons/ExitIcon.vue'
+import FeedbackIcon from './icons/FeedbackIcon.vue'
+import RequisitesIcon from './icons/RequisitesIcon.vue'
 
 // Подключаем хранилище пользователя
 const userStore = useUserStore()
@@ -75,7 +78,7 @@ watch(
 )
 </script>
 <template>
-  <header class="border-b  border-gray-200 text-[#777] w-full top-0 fixed z-[999] backdrop-blur bg-white/20">
+  <header class="border-b  border-gray-200 text-[#777] w-full top-0 fixed z-[999] backdrop-blur bg-white/50">
     <div :class="isOpen ? 'bg-white' : 'mx-auto my-0 w-4/5 py-4 items-center justify-between flex ' ">
       <router-link
         to="/"
@@ -231,20 +234,28 @@ watch(
               </li>
               <li class="w-full text-wrap p-1">
                 <RouterLink
+                class="flex gap-4"
                   v-if="userStore.user"
                   :to="{
                     name: 'user.requisites',
                     path: 'user/:id/requisites/',
                     params: { id: userStore.user.id },
                   }"
-                  >Редактировать реквизиты</RouterLink
+                  >Редактировать реквизиты
+                  <RequisitesIcon/>
+                  </RouterLink
                 >
               </li>
-              <li class="w-full text-nowrap p-1">
-                <RouterLink to="/feedback">Обратная связь</RouterLink>
+              <li class="w-full text-nowrap p-1 ">
+                <RouterLink to="/feedback" class="flex gap-4">Обратная связь
+                  <FeedbackIcon/>
+                </RouterLink>
               </li>
               <li class="w-full text-nowrap p-1">
-                <button class="w-full text-start" v-if="userStore.user" @click="logout">Выйти</button>
+                <button class="w-full text-start flex gap-4" v-if="userStore.user" @click="logout">
+                  Выйти
+                  <ExitIcon/>
+                </button>
               </li>
             </ul>
           </transition>

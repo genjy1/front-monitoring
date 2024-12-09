@@ -128,7 +128,7 @@
 
         <button
           type="submit"
-          class="my-2 py-2 px-4 border-2 border-purple-900 rounded w-full sm:w-min text-nowrap"
+          class="my-2 py-2 px-4 border-2 border-purple-900 rounded w-full sm:w-min text-nowrap hover:bg-purple-900 hover:text-white transition-all"
           @click="submitData"
         >
           {{ isSubmitting ? 'Отправка...' : 'Отправить реквизиты' }}
@@ -178,8 +178,8 @@ const hoveredIndex = ref(-1) // Индекс выбранного элемент
 const isLoading = ref(false) // Индикатор загрузки
 const error = ref('') // Сообщение об ошибке
 const debounceTimer = ref(null) // Переменная для хранения таймера debounce
-const banksUrl = 'http://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/bank'
-const orgUrl = 'http://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/party'
+const banksUrl = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/bank'
+const orgUrl = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/party'
 
 // Получение подсказок для банка
 const handleOrgInput = () => {
@@ -286,8 +286,6 @@ const submitData = async () => {
       address: bankDataFromSuggestions.Адрес,
     },
   }
-
-  console.log(requestData)
 
   try {
     const response = await axios.post(`/user/${id}/requisites/create`, { requisites: requestData })

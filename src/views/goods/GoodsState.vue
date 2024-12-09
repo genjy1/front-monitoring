@@ -42,7 +42,7 @@
         <tr class="capitalize border-y bg-gray-200">
           <th class="font-normal border-r py-2 px-4" v-if="columns.number[0]"># автомата</th>
           <th class="font-normal border-r py-2 px-4" v-if="columns.address[0]">адрес</th>
-          <th class="font-normal border-r py-2 px-4" v-if="columns.machine[0]">автомат</th>
+          <th class="font-normal border-r py-2 px-4" v-if="columns.machine">автомат</th>
           <th class="font-normal border-r py-2 px-4" v-if="columns.goodNumber[0]"># продукта</th>
           <th class="font-normal border-r py-2 px-4" v-if="columns.goodCode[0]">код продукта</th>
           <th class="font-normal border-r py-2 px-4" v-if="columns.good[0]">продукт</th>
